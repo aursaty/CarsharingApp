@@ -10,4 +10,6 @@
     <string name="status__label">Status</string>
     <string name="creation_date_label">Creation date</string>
     <string name="creation_date_default">04.10.1999</string>
+    <string name="delete_car_label">Delete Car</string>
+    <string name="save_changes_label">Save changes</string>
 </resources>

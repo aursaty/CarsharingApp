@@ -24,7 +24,7 @@ import ua.alex.carsharingapp.data.Car
 class CarListFragment : Fragment(), LoaderManager.LoaderCallbacks<List<Car>> {
     companion object {
         const val CAR_NUMBER_BUNDLE_KEY = "CAR_NUMBER_BUNDLE_KEY"
-//        private val CAR_REQUEST_URL = "http://localhost:8080/api/cars/getAllCars"
+        //        private val CAR_REQUEST_URL = "http://localhost:8080/api/cars/getAllCars"
 //        private val CAR_REQUEST_URL = "http://192.168.1.138:8080/api/cars/getAllCars"
 //        private val CAR_REQUEST_URL = "http://172.16.11.66:8080/api/cars/getAllCars"
         private const val CAR_LIST_REQUEST_URL = "/api/cars/getAllCars"
@@ -35,6 +35,8 @@ class CarListFragment : Fragment(), LoaderManager.LoaderCallbacks<List<Car>> {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+
+        (activity as MainActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(false)
         return inflater.inflate(R.layout.fragment_car_list, container, false)
     }
 
@@ -65,7 +67,10 @@ class CarListFragment : Fragment(), LoaderManager.LoaderCallbacks<List<Car>> {
             val bundle = Bundle()
             bundle.putString(CAR_NUMBER_BUNDLE_KEY, carNumber)
             carFragment.arguments = bundle
-            activity.fragmentManager.beginTransaction().replace(R.id.content, carFragment, "CarFragment").commit()
+            activity.fragmentManager.beginTransaction()
+                    .replace(R.id.content, carFragment, "CarFragment")
+                    .addToBackStack("CarFragment")
+                    .commit()
         }
     }
 
@@ -110,7 +115,7 @@ class CarListFragment : Fragment(), LoaderManager.LoaderCallbacks<List<Car>> {
 //            val jsonTest = ObjectMapper().writeValueAsString(carsTest)
             val type: JavaType = ObjectMapper().typeFactory.constructParametricType(List::class.java, Car::class.java)
             val carsJson = QueryUtils.fetchData(stringUrl)
-            val cars : List<Car> = ObjectMapper().readValue(carsJson, type)
+            val cars: List<Car> = ObjectMapper().readValue(carsJson, type)
             return cars
         }
 

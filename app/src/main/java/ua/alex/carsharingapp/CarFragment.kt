@@ -9,11 +9,8 @@ import android.content.Loader
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.design.widget.TextInputEditText
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Button
-import android.widget.TextView
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.jaredrummler.android.colorpicker.ColorPickerDialogListener
 import ua.alex.carsharingapp.CarListFragment.Companion.CAR_NUMBER_BUNDLE_KEY
@@ -33,9 +30,16 @@ class CarFragment : Fragment(), ColorPickerDialogListener, LoaderManager.LoaderC
     lateinit var colorButton: Button
 
     var carNumber = ""
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
+
+        (activity as MainActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         carNumber = arguments.getString(CAR_NUMBER_BUNDLE_KEY)
 
@@ -70,6 +74,21 @@ class CarFragment : Fragment(), ColorPickerDialogListener, LoaderManager.LoaderC
         val bundle = Bundle()
         bundle.putString(CAR_NUMBER_BUNDLE_KEY, CAR_REQUEST_URL + carNumber)
         loaderManager.initLoader<Car>(0, bundle, this@CarFragment).forceLoad()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater!!.inflate(R.menu.car_fragment_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when (item!!.itemId) {
+            android.R.id.home -> {
+                activity!!.fragmentManager.popBackStack()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onColorSelected(dialogId: Int, color: Int) {
