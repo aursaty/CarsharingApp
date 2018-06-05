@@ -7,17 +7,18 @@ import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.MalformedURLException
+import java.net.URI
 import java.net.URL
 import java.nio.charset.Charset
 
 class QueryUtils {
 
     companion object {
+        private const val SERVER_ADDRESS = "http://192.168.0.79:8080"
         private val LOG_TAG = QueryUtils::class.java.simpleName
 
-        fun fetchData(requestString: String) : String {
-            val url = createUrl(requestString)
-
+        fun fetchData(requestString: String): String {
+            val url = createUrl(SERVER_ADDRESS + requestString)
             return makeHttpRequest(url, "GET", "")!!
         }
 

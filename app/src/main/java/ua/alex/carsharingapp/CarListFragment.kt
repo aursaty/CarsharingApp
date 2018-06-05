@@ -16,8 +16,6 @@ import android.widget.TextView
 import com.fasterxml.jackson.databind.JavaType
 import com.fasterxml.jackson.databind.ObjectMapper
 import ua.alex.carsharingapp.data.Car
-import ua.alex.carsharingapp.data.Insurance
-import ua.alex.carsharingapp.data.Model
 
 /**
  * A simple [Fragment] subclass.
@@ -25,12 +23,15 @@ import ua.alex.carsharingapp.data.Model
  */
 class CarListFragment : Fragment(), LoaderManager.LoaderCallbacks<List<Car>> {
     companion object {
+        const val CAR_NUMBER_BUNDLE_KEY = "CAR_NUMBER_BUNDLE_KEY"
 //        private val CAR_REQUEST_URL = "http://localhost:8080/api/cars/getAllCars"
 //        private val CAR_REQUEST_URL = "http://192.168.1.138:8080/api/cars/getAllCars"
 //        private val CAR_REQUEST_URL = "http://172.16.11.66:8080/api/cars/getAllCars"
-        private const val CAR_REQUEST_URL = "http://192.168.0.79:8080/api/cars/getAllCars"
+        private const val CAR_LIST_REQUEST_URL = "/api/cars/getAllCars"
 //        private val CAR_REQUEST_URL = "https://www.googleapis.com/books/v1/volumes?q=s&maxResults=10"
     }
+
+    private var carNumber = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -57,14 +58,25 @@ class CarListFragment : Fragment(), LoaderManager.LoaderCallbacks<List<Car>> {
 //                        "green", "true", "11-01-2001", model, insurance),
 //                Car("AA0004AA", "1", "Green Street, 1",
 //                        "green", "true", "11-01-2001", model, insurance)))
-        view!!.findViewById<ListView>(R.id.car_list_view).setOnItemClickListener { parent, _, position, id ->
-            activity.fragmentManager.beginTransaction().replace(R.id.content, CarFragment(), "CarFragment").commit()
+
+        view!!.findViewById<ListView>(R.id.car_list_view).setOnItemClickListener { parent, itemView, position, id ->
+            val carFragment = CarFragment()
+            val carNumber = itemView.findViewById<TextView>(R.id.car_number).text as String
+            val bundle = Bundle()
+            bundle.putString(CAR_NUMBER_BUNDLE_KEY, carNumber)
+            carFragment.arguments = bundle
+            activity.fragmentManager.beginTransaction().replace(R.id.content, carFragment, "CarFragment").commit()
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+
         loaderManager.initLoader<List<Car>>(0, null, this@CarListFragment).forceLoad()
     }
 
     override fun onCreateLoader(p0: Int, p1: Bundle?): Loader<List<Car>> {
-        return CarLoader(activity, CAR_REQUEST_URL)
+        return CarsLoader(activity, CAR_LIST_REQUEST_URL)
     }
 
     override fun onLoadFinished(p0: Loader<List<Car>>?, p1: List<Car>?) {
@@ -82,7 +94,7 @@ class CarListFragment : Fragment(), LoaderManager.LoaderCallbacks<List<Car>> {
         carListView.adapter = carAdapter
     }
 
-    private class CarLoader(context: Context, val stringUrl: String) : AsyncTaskLoader<List<Car>>(context) {
+    private class CarsLoader(context: Context, val stringUrl: String) : AsyncTaskLoader<List<Car>>(context) {
         override fun loadInBackground(): List<Car> {
 
 //            val model = Model("F150", "Ford", 100.0, 10.0, "jeep")
