@@ -14,6 +14,7 @@ import android.widget.Button
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.jaredrummler.android.colorpicker.ColorPickerDialogListener
 import ua.alex.carsharingapp.CarListFragment.Companion.CAR_NUMBER_BUNDLE_KEY
+import ua.alex.carsharingapp.MainActivity.Companion.REQUEST_METHOD_BUNDLE_KEY
 import ua.alex.carsharingapp.data.Car
 import yuku.ambilwarna.AmbilWarnaDialog
 
@@ -73,6 +74,7 @@ class CarFragment : Fragment(), ColorPickerDialogListener, LoaderManager.LoaderC
 
         val bundle = Bundle()
         bundle.putString(CAR_NUMBER_BUNDLE_KEY, CAR_REQUEST_URL + carNumber)
+        bundle.putString(REQUEST_METHOD_BUNDLE_KEY, "GET")
         loaderManager.initLoader<Car>(0, bundle, this@CarFragment).forceLoad()
     }
 
@@ -84,6 +86,17 @@ class CarFragment : Fragment(), ColorPickerDialogListener, LoaderManager.LoaderC
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when (item!!.itemId) {
             android.R.id.home -> {
+                activity!!.fragmentManager.popBackStack()
+                true
+            }
+            R.id.delete_car_item_menu -> {
+                val bundle = Bundle()
+                bundle.putString(REQUEST_METHOD_BUNDLE_KEY, "DELETE")
+                bundle.putString(CAR_NUMBER_BUNDLE_KEY, CAR_REQUEST_URL + carNumber)
+                if (loaderManager.getLoader<Car>(0) == null)
+                    loaderManager.initLoader<Car>(0, bundle, this@CarFragment).forceLoad()
+                else
+                    loaderManager.restartLoader<Car>(0, bundle, this@CarFragment).forceLoad()
                 activity!!.fragmentManager.popBackStack()
                 true
             }
@@ -99,11 +112,15 @@ class CarFragment : Fragment(), ColorPickerDialogListener, LoaderManager.LoaderC
     }
 
     override fun onCreateLoader(p0: Int, p1: Bundle?): Loader<Car> {
-        return CarLoader(activity, p1!!.getString(CAR_NUMBER_BUNDLE_KEY))
+        return GetCarLoader(activity,
+                p1!!.getString(CAR_NUMBER_BUNDLE_KEY),
+                p1.getString(REQUEST_METHOD_BUNDLE_KEY))
     }
 
     override fun onLoadFinished(p0: Loader<Car>?, p1: Car?) {
-        updateUi(p1!!)
+        if (p1 != null) {
+            updateUi(p1)
+        }
     }
 
     override fun onLoaderReset(p0: Loader<Car>?) {
@@ -115,11 +132,13 @@ class CarFragment : Fragment(), ColorPickerDialogListener, LoaderManager.LoaderC
         view.findViewById<TextInputEditText>(R.id.address_edit_text).setText(car.address)
     }
 
-    private class CarLoader(context: Context, val stringUrl: String) : AsyncTaskLoader<Car>(context) {
-        override fun loadInBackground(): Car {
-            val carJson = QueryUtils.fetchData(stringUrl)
-            return ObjectMapper().readValue(carJson, Car::class.java)
+    private class GetCarLoader(context: Context, val stringUrl: String, val requestMethod: String) : AsyncTaskLoader<Car>(context) {
+        override fun loadInBackground(): Car? {
+            val carJson = QueryUtils.fetchData(stringUrl, requestMethod)
+            return if (carJson == "")
+                return null
+            else
+                ObjectMapper().readValue(carJson, Car::class.java)
         }
-
     }
 }

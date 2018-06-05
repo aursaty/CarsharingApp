@@ -15,6 +15,8 @@ import android.widget.ListView
 import android.widget.TextView
 import com.fasterxml.jackson.databind.JavaType
 import com.fasterxml.jackson.databind.ObjectMapper
+import ua.alex.carsharingapp.MainActivity.Companion.REQUEST_METHOD_BUNDLE_KEY
+import ua.alex.carsharingapp.MainActivity.Companion.REQUEST_URL_BUNDLE_KEY
 import ua.alex.carsharingapp.data.Car
 
 /**
@@ -77,11 +79,14 @@ class CarListFragment : Fragment(), LoaderManager.LoaderCallbacks<List<Car>> {
     override fun onStart() {
         super.onStart()
 
-        loaderManager.initLoader<List<Car>>(0, null, this@CarListFragment).forceLoad()
+        val bundle = Bundle()
+        bundle.putString(REQUEST_METHOD_BUNDLE_KEY, "GET")
+        bundle.putString(REQUEST_URL_BUNDLE_KEY, CAR_LIST_REQUEST_URL)
+        loaderManager.initLoader<List<Car>>(0, bundle, this@CarListFragment).forceLoad()
     }
 
     override fun onCreateLoader(p0: Int, p1: Bundle?): Loader<List<Car>> {
-        return CarsLoader(activity, CAR_LIST_REQUEST_URL)
+        return GetCarsLoader(activity, p1!!.getString(REQUEST_URL_BUNDLE_KEY))
     }
 
     override fun onLoadFinished(p0: Loader<List<Car>>?, p1: List<Car>?) {
@@ -99,7 +104,7 @@ class CarListFragment : Fragment(), LoaderManager.LoaderCallbacks<List<Car>> {
         carListView.adapter = carAdapter
     }
 
-    private class CarsLoader(context: Context, val stringUrl: String) : AsyncTaskLoader<List<Car>>(context) {
+    private class GetCarsLoader(context: Context, val stringUrl: String) : AsyncTaskLoader<List<Car>>(context) {
         override fun loadInBackground(): List<Car> {
 
 //            val model = Model("F150", "Ford", 100.0, 10.0, "jeep")
@@ -114,9 +119,8 @@ class CarListFragment : Fragment(), LoaderManager.LoaderCallbacks<List<Car>> {
 //                            "green", "true", "11-01-2001", model, insurance))//)
 //            val jsonTest = ObjectMapper().writeValueAsString(carsTest)
             val type: JavaType = ObjectMapper().typeFactory.constructParametricType(List::class.java, Car::class.java)
-            val carsJson = QueryUtils.fetchData(stringUrl)
-            val cars: List<Car> = ObjectMapper().readValue(carsJson, type)
-            return cars
+            val carsJson = QueryUtils.fetchData(stringUrl, "GET")
+            return ObjectMapper().readValue(carsJson, type)
         }
 
     }
