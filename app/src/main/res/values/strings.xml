@@ -1,6 +1,13 @@
 <resources>
     <string name="app_name">CarsharingApp</string>
 
-     <!--TO Remove or change this placeholder text -->
+    <!--TO Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="car_number_label">Car number</string>
+    <string name="fuel_card_number_label">Fuel card number</string>
+    <string name="address_label">Address</string>
+    <string name="color">Color</string>
+    <string name="status__label">Status</string>
+    <string name="creation_date_label">Creation date</string>
+    <string name="creation_date_default">04.10.1999</string>
 </resources>

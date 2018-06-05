@@ -23,6 +23,11 @@ android {
 }
 
 dependencies {
+    implementation 'com.jaredrummler:colorpicker:1.0.2'
+    implementation 'net.margaritov.preference.colorpicker.ColorPickerPreference:ColorPickerPreference:1.0.0'
+    implementation 'com.github.yukuku:ambilwarna:2.0.1'
+//    compile 'com.github.QuadFlask:colorpicker:0.0.13'
+    implementation "com.android.support:design:27.1.1"
     implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.5"
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"

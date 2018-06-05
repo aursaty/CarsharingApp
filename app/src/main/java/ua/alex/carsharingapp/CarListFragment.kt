@@ -16,7 +16,6 @@ import android.widget.TextView
 import com.fasterxml.jackson.databind.JavaType
 import com.fasterxml.jackson.databind.ObjectMapper
 import ua.alex.carsharingapp.data.Car
-import ua.alex.carsharingapp.data.Cars
 import ua.alex.carsharingapp.data.Insurance
 import ua.alex.carsharingapp.data.Model
 
@@ -26,12 +25,11 @@ import ua.alex.carsharingapp.data.Model
  */
 class CarListFragment : Fragment(), LoaderManager.LoaderCallbacks<List<Car>> {
     companion object {
-        private val CAR_REQUEST_URL = "http://localhost:8080/api/cars/getAllCars"
+//        private val CAR_REQUEST_URL = "http://localhost:8080/api/cars/getAllCars"
+//        private val CAR_REQUEST_URL = "http://192.168.1.138:8080/api/cars/getAllCars"
+//        private val CAR_REQUEST_URL = "http://172.16.11.66:8080/api/cars/getAllCars"
+        private const val CAR_REQUEST_URL = "http://192.168.0.79:8080/api/cars/getAllCars"
 //        private val CAR_REQUEST_URL = "https://www.googleapis.com/books/v1/volumes?q=s&maxResults=10"
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -42,23 +40,26 @@ class CarListFragment : Fragment(), LoaderManager.LoaderCallbacks<List<Car>> {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val model = Model("F150", "Ford", 100.0, 10.0, "jeep")
-        val insurance = Insurance("A1",
-                "10-10-2010",
-                "10-10-2020",
-                "Weed Street, 420",
-                "1",
-                "OMEGA")
-        updateUi(listOf(Car("AA0000AA", "1", "Green Street, 1",
-                "green", "true", "11-01-2001", model, insurance),
-                Car("AA0001AA", "1", "Green Street, 1",
-                        "green", "true", "11-01-2001", model, insurance),
-                Car("AA0002AA", "1", "Green Street, 1",
-                        "green", "true", "11-01-2001", model, insurance),
-                Car("AA0003AA", "1", "Green Street, 1",
-                        "green", "true", "11-01-2001", model, insurance),
-                Car("AA0004AA", "1", "Green Street, 1",
-                        "green", "true", "11-01-2001", model, insurance)))
+//        val model = Model("F150", "Ford", 100.0, 10.0, "jeep")
+//        val insurance = Insurance("A1",
+//                "10-10-2010",
+//                "10-10-2020",
+//                "Weed Street, 420",
+//                "1",
+//                "OMEGA")
+//        updateUi(listOf(Car("AA0000AA", "1", "Green Street, 1",
+//                "green", "true", "11-01-2001", model, insurance),
+//                Car("AA0001AA", "1", "Green Street, 1",
+//                        "green", "true", "11-01-2001", model, insurance),
+//                Car("AA0002AA", "1", "Green Street, 1",
+//                        "green", "true", "11-01-2001", model, insurance),
+//                Car("AA0003AA", "1", "Green Street, 1",
+//                        "green", "true", "11-01-2001", model, insurance),
+//                Car("AA0004AA", "1", "Green Street, 1",
+//                        "green", "true", "11-01-2001", model, insurance)))
+        view!!.findViewById<ListView>(R.id.car_list_view).setOnItemClickListener { parent, _, position, id ->
+            activity.fragmentManager.beginTransaction().replace(R.id.content, CarFragment(), "CarFragment").commit()
+        }
         loaderManager.initLoader<List<Car>>(0, null, this@CarListFragment).forceLoad()
     }
 
