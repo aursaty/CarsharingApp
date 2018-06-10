@@ -65,6 +65,7 @@
     </LinearLayout>
 
     <Switch
+        android:id="@+id/status_switch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingEnd="4dp"
@@ -88,11 +89,24 @@
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
 
         <TextView
+            android:id="@+id/date_text_view"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:shadowColor="#FFFFFF"
             android:text="@string/creation_date_default"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/model_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline" />
+
+    <TextView
+        android:id="@+id/insurance_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline" />
 
 </LinearLayout>

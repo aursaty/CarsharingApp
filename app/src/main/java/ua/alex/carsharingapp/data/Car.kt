@@ -5,7 +5,7 @@ class Car(
         var fuelCardNumber: String = "",
         var address: String = "",
         var color: String = "",
-        var status: String = "",
+        var status: Boolean = false,
         var creatingDate: String = "",
         var model: Model = Model("", "", 0.0, 0.0, ""),
         var insurance: Insurance = Insurance("", "", "", "", "", "")

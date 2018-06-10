@@ -15,6 +15,7 @@ import android.widget.ListView
 import android.widget.TextView
 import com.fasterxml.jackson.databind.JavaType
 import com.fasterxml.jackson.databind.ObjectMapper
+import ua.alex.carsharingapp.MainActivity.Companion.JSON_BUNDLE_KEY
 import ua.alex.carsharingapp.MainActivity.Companion.REQUEST_METHOD_BUNDLE_KEY
 import ua.alex.carsharingapp.MainActivity.Companion.REQUEST_URL_BUNDLE_KEY
 import ua.alex.carsharingapp.data.Car
@@ -23,7 +24,7 @@ import ua.alex.carsharingapp.data.Car
  * A simple [Fragment] subclass.
  *
  */
-class CarListFragment : Fragment(), LoaderManager.LoaderCallbacks<List<Car>> {
+class CarListFragment : Fragment() {
     companion object {
         const val CAR_NUMBER_BUNDLE_KEY = "CAR_NUMBER_BUNDLE_KEY"
         //        private val CAR_REQUEST_URL = "http://localhost:8080/api/cars/getAllCars"
@@ -76,26 +77,19 @@ class CarListFragment : Fragment(), LoaderManager.LoaderCallbacks<List<Car>> {
         }
     }
 
+    // ???
     override fun onStart() {
         super.onStart()
 
         val bundle = Bundle()
         bundle.putString(REQUEST_METHOD_BUNDLE_KEY, "GET")
         bundle.putString(REQUEST_URL_BUNDLE_KEY, CAR_LIST_REQUEST_URL)
-        loaderManager.initLoader<List<Car>>(0, bundle, this@CarListFragment).forceLoad()
+        bundle.putString(JSON_BUNDLE_KEY, "")
+        loaderManager.initLoader<List<Car>>(0, bundle, loaderCallbackCarList).forceLoad()
     }
 
-    override fun onCreateLoader(p0: Int, p1: Bundle?): Loader<List<Car>> {
-        return GetCarsLoader(activity, p1!!.getString(REQUEST_URL_BUNDLE_KEY))
-    }
-
-    override fun onLoadFinished(p0: Loader<List<Car>>?, p1: List<Car>?) {
-        updateUi(p1!!)
-    }
-
-    override fun onLoaderReset(p0: Loader<List<Car>>?) {
-    }
-
+    //
+//
     private fun updateUi(cars: List<Car>) {
         val carListView = view.findViewById<ListView>(R.id.car_list_view)
 
@@ -104,22 +98,23 @@ class CarListFragment : Fragment(), LoaderManager.LoaderCallbacks<List<Car>> {
         carListView.adapter = carAdapter
     }
 
-    private class GetCarsLoader(context: Context, val stringUrl: String) : AsyncTaskLoader<List<Car>>(context) {
-        override fun loadInBackground(): List<Car> {
+    private val loaderCallbackCarList: LoaderManager.LoaderCallbacks<List<Car>> = object : LoaderManager.LoaderCallbacks<List<Car>> {
+        override fun onCreateLoader(p0: Int, p1: Bundle?): Loader<List<Car>> {
+            return CarsLoader(activity, p1!!.getString(REQUEST_URL_BUNDLE_KEY))
+        }
 
-//            val model = Model("F150", "Ford", 100.0, 10.0, "jeep")
-//            val insurance = Insurance("A1",
-//                    "10-10-2010",
-//                    "10-10-2020",
-//                    "Weed Street, 420",
-//                    "1",
-//                    "OMEGA")
-//            val carsTest = //Cars(
-//                    listOf(Car("AA0001AA", "1", "Green Street, 1",
-//                            "green", "true", "11-01-2001", model, insurance))//)
-//            val jsonTest = ObjectMapper().writeValueAsString(carsTest)
+        override fun onLoadFinished(p0: Loader<List<Car>>?, p1: List<Car>?) {
+            updateUi(p1!!)
+        }
+
+        override fun onLoaderReset(p0: Loader<List<Car>>?) {
+        }
+    }
+
+    private class CarsLoader(context: Context, val stringUrl: String) : AsyncTaskLoader<List<Car>>(context) {
+        override fun loadInBackground(): List<Car> {
             val type: JavaType = ObjectMapper().typeFactory.constructParametricType(List::class.java, Car::class.java)
-            val carsJson = QueryUtils.fetchData(stringUrl, "GET")
+            val carsJson = QueryUtils.fetchData(stringUrl, "GET", "")
             return ObjectMapper().readValue(carsJson, type)
         }
 
@@ -138,7 +133,7 @@ class CarListFragment : Fragment(), LoaderManager.LoaderCallbacks<List<Car>> {
             listItemView!!.findViewById<TextView>(R.id.brand).text = car.model.brand
             listItemView.findViewById<TextView>(R.id.cost).text = car.model.cost.toString()
             listItemView.findViewById<TextView>(R.id.car_number).text = car.number
-            listItemView.findViewById<TextView>(R.id.status).text = car.status
+            listItemView.findViewById<TextView>(R.id.status).text = car.status.toString()
 
             return listItemView
         }

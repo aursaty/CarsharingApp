@@ -13,12 +13,12 @@ import java.nio.charset.Charset
 class QueryUtils {
 
     companion object {
-        private const val SERVER_ADDRESS = "http://172.16.11.66:8080"
+        private const val SERVER_ADDRESS = "http://192.168.1.138:8080"
         private val LOG_TAG = QueryUtils::class.java.simpleName
 
-        fun fetchData(requestString: String, requestMethod: String): String {
+        fun fetchData(requestString: String, requestMethod: String, stringJson: String): String {
             val url = createUrl(SERVER_ADDRESS + requestString)
-            return makeHttpRequest(url, requestMethod, "")!!
+            return makeHttpRequest(url, requestMethod, stringJson)!!
         }
 
         private fun makeHttpRequest(url: URL?, method: String, json: String): String? {
@@ -41,6 +41,10 @@ class QueryUtils {
                 if (urlConnection.responseCode == 200) {
                     inputStream = urlConnection.inputStream
                     jsonResponse = readFromStream(inputStream)
+                    return if (method == "GET")
+                        jsonResponse
+                    else
+                        ""
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
