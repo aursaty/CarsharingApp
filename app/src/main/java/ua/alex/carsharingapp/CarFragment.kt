@@ -32,7 +32,12 @@ import yuku.ambilwarna.AmbilWarnaDialog
 class CarFragment : Fragment() {
 
     companion object {
+        private const val CAR_LOADER_ID = 1
+        private const val MODEL_LIST_LOADER_ID = 2
+        private const val INSURANCE_LIST_LOADER_ID = 3
         private const val CAR_REQUEST_URL = "/api/cars/car_number="
+        private const val MODEL_LIST_REQUEST_URL = "/api/models/getAllModels"
+        private const val INSURANCE_LIST_REQUEST_URL = "/api/insurances/getAllInsurances"
         private const val PUT_CAR_REQUEST_URL = "/api/cars"
     }
 
@@ -89,12 +94,20 @@ class CarFragment : Fragment() {
             bundleCar.putString(REQUEST_URL_BUNDLE_KEY, CAR_REQUEST_URL + carNumber)
             bundleCar.putString(REQUEST_METHOD_BUNDLE_KEY, "GET")
             bundleCar.putString(JSON_BUNDLE_KEY, "")
-            val bundle = Bundle()
-            bundle.putString(REQUEST_URL_BUNDLE_KEY, CAR_REQUEST_URL + carNumber)
-            bundle.putString(REQUEST_METHOD_BUNDLE_KEY, "GET")
-            bundle.putString(JSON_BUNDLE_KEY, "")
-            loaderManager.initLoader<Car>(0, bundle, loaderCallbackCar).forceLoad()
-//        loaderManager.initLoader<List<Model>>(0, bundle, loaderCallbackModelList).forceLoad()
+
+            val bundleModelList = Bundle()
+            bundleModelList.putString(REQUEST_URL_BUNDLE_KEY, MODEL_LIST_REQUEST_URL)
+            bundleModelList.putString(REQUEST_METHOD_BUNDLE_KEY, "GET")
+            bundleModelList.putString(JSON_BUNDLE_KEY, "")
+
+            val bundleInsuranceList = Bundle()
+            bundleInsuranceList.putString(REQUEST_URL_BUNDLE_KEY, INSURANCE_LIST_REQUEST_URL)
+            bundleInsuranceList.putString(REQUEST_METHOD_BUNDLE_KEY, "GET")
+            bundleInsuranceList.putString(JSON_BUNDLE_KEY, "")
+
+            loaderManager.initLoader<Car>(CAR_LOADER_ID, bundleCar, loaderCallbackCar).forceLoad()
+            loaderManager.initLoader<List<Model>>(MODEL_LIST_LOADER_ID, bundleModelList, loaderCallbackModelList).forceLoad()
+            loaderManager.initLoader<List<Insurance>>(INSURANCE_LIST_LOADER_ID, bundleInsuranceList, loaderCallbackInsuranceList).forceLoad()
         }
     }
 
@@ -114,10 +127,10 @@ class CarFragment : Fragment() {
                 bundle.putString(REQUEST_METHOD_BUNDLE_KEY, "DELETE")
                 bundle.putString(JSON_BUNDLE_KEY, "")
                 bundle.putString(REQUEST_URL_BUNDLE_KEY, CAR_REQUEST_URL + carNumber)
-                if (loaderManager.getLoader<Car>(0) == null)
-                    loaderManager.initLoader<Car>(0, bundle, loaderCallbackCar).forceLoad()
+                if (loaderManager.getLoader<Car>(CAR_LOADER_ID) == null)
+                    loaderManager.initLoader<Car>(CAR_LOADER_ID, bundle, loaderCallbackCar).forceLoad()
                 else
-                    loaderManager.restartLoader<Car>(0, bundle, loaderCallbackCar).forceLoad()
+                    loaderManager.restartLoader<Car>(CAR_LOADER_ID, bundle, loaderCallbackCar).forceLoad()
                 true
             }
             R.id.save_car_item_menu -> {
@@ -143,10 +156,10 @@ class CarFragment : Fragment() {
                 bundle.putString(JSON_BUNDLE_KEY, json)
                 bundle.putString(REQUEST_URL_BUNDLE_KEY, PUT_CAR_REQUEST_URL)
 
-                if (loaderManager.getLoader<Car>(0) == null)
-                    loaderManager.initLoader<Car>(0, bundle, loaderCallbackCar).forceLoad()
+                if (loaderManager.getLoader<Car>(CAR_LOADER_ID) == null)
+                    loaderManager.initLoader<Car>(CAR_LOADER_ID, bundle, loaderCallbackCar).forceLoad()
                 else
-                    loaderManager.restartLoader<Car>(0, bundle, loaderCallbackCar).forceLoad()
+                    loaderManager.restartLoader<Car>(CAR_LOADER_ID, bundle, loaderCallbackCar).forceLoad()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -160,15 +173,20 @@ class CarFragment : Fragment() {
         view.findViewById<Button>(R.id.color_button).setBackgroundColor(Integer.parseInt(car.color))
         view.findViewById<Switch>(R.id.status_switch).isChecked = car.status
         view.findViewById<TextView>(R.id.date_text_view).text = car.creatingDate
-//        view.findViewById<TextView>(R.id.model_text_view).text = car.model.name
-//        view.findViewById<TextView>(R.id.insurance_text_view).text = car.insurance.series
     }
 
-    private fun updateSpinnerUi(modelList: List<Model>) {
+    private fun updateModelSpinnerUi(modelList: List<Model>) {
         view.findViewById<Spinner>(R.id.model_spinner).adapter =
                 ArrayAdapter<String>(activity,
                         android.R.layout.simple_dropdown_item_1line,
                         modelList.map { it.name })
+    }
+
+    private fun updateInsuranceSpinnerUi(insuranceList: List<Insurance>) {
+        view.findViewById<Spinner>(R.id.insurance_spinner).adapter =
+                ArrayAdapter<String>(activity,
+                        android.R.layout.simple_dropdown_item_1line,
+                        insuranceList.map { it.series })
     }
 
     private val loaderCallbackCar: LoaderManager.LoaderCallbacks<Car> = object : LoaderManager.LoaderCallbacks<Car> {
@@ -202,11 +220,29 @@ class CarFragment : Fragment() {
 
         override fun onLoadFinished(p0: Loader<List<Model>>?, p1: List<Model>?) {
             if (p1 != null) {
-                updateSpinnerUi(p1)
+                updateModelSpinnerUi(p1)
             }
         }
 
         override fun onLoaderReset(p0: Loader<List<Model>>?) {
+        }
+    }
+
+    private val loaderCallbackInsuranceList: LoaderManager.LoaderCallbacks<List<Insurance>> = object : LoaderManager.LoaderCallbacks<List<Insurance>> {
+        override fun onCreateLoader(p0: Int, p1: Bundle?): Loader<List<Insurance>> {
+            return GetInsuranceListLoader(activity,
+                    p1!!.getString(REQUEST_URL_BUNDLE_KEY),
+                    p1.getString(REQUEST_METHOD_BUNDLE_KEY),
+                    p1.getString(JSON_BUNDLE_KEY))
+        }
+
+        override fun onLoadFinished(p0: Loader<List<Insurance>>?, p1: List<Insurance>?) {
+            if (p1 != null) {
+                updateInsuranceSpinnerUi(p1)
+            }
+        }
+
+        override fun onLoaderReset(p0: Loader<List<Insurance>>?) {
         }
     }
 
@@ -237,6 +273,17 @@ class CarFragment : Fragment() {
         override fun loadInBackground(): List<Model> {
             val carJson = QueryUtils.fetchData(stringUrl, requestMethod, stringJson)
             val type: JavaType = ObjectMapper().typeFactory.constructParametricType(List::class.java, Model::class.java)
+            return ObjectMapper().readValue(carJson, type)
+        }
+    }
+
+    private class GetInsuranceListLoader(context: Context,
+                                     val stringUrl: String,
+                                     val requestMethod: String,
+                                     val stringJson: String) : AsyncTaskLoader<List<Insurance>>(context) {
+        override fun loadInBackground(): List<Insurance> {
+            val carJson = QueryUtils.fetchData(stringUrl, requestMethod, stringJson)
+            val type: JavaType = ObjectMapper().typeFactory.constructParametricType(List::class.java, Insurance::class.java)
             return ObjectMapper().readValue(carJson, type)
         }
     }
