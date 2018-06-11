@@ -32,6 +32,7 @@ import yuku.ambilwarna.AmbilWarnaDialog
 class CarFragment : Fragment() {
 
     companion object {
+        private const val CAR_EDIT_LOADER_ID = -1
         private const val CAR_LOADER_ID = 1
         private const val MODEL_LIST_LOADER_ID = 2
         private const val INSURANCE_LIST_LOADER_ID = 3
@@ -126,18 +127,18 @@ class CarFragment : Fragment() {
                 true
             }
             R.id.delete_car_item_menu -> {
-                val bundle = Bundle()
-                bundle.putString(REQUEST_METHOD_BUNDLE_KEY, "DELETE")
-                bundle.putString(JSON_BUNDLE_KEY, "")
-                bundle.putString(REQUEST_URL_BUNDLE_KEY, CAR_REQUEST_URL + carNumber)
+                val deleteBundle = Bundle()
+                deleteBundle.putString(REQUEST_METHOD_BUNDLE_KEY, "DELETE")
+                deleteBundle.putString(JSON_BUNDLE_KEY, "")
+                deleteBundle.putString(REQUEST_URL_BUNDLE_KEY, CAR_REQUEST_URL + carNumber)
                 if (loaderManager.getLoader<Car>(CAR_LOADER_ID) == null)
-                    loaderManager.initLoader<Car>(CAR_LOADER_ID, bundle, loaderCallbackCar).forceLoad()
+                    loaderManager.initLoader<Car>(CAR_LOADER_ID, deleteBundle, loaderCallbackCar).forceLoad()
                 else
-                    loaderManager.restartLoader<Car>(CAR_LOADER_ID, bundle, loaderCallbackCar).forceLoad()
+                    loaderManager.restartLoader<Car>(CAR_LOADER_ID, deleteBundle, loaderCallbackCar).forceLoad()
                 true
             }
             R.id.save_car_item_menu -> {
-                val carNumber: String = view.findViewById<TextInputEditText>(R.id.card_number_edit_text).text.toString()
+                val number: String = view.findViewById<TextInputEditText>(R.id.card_number_edit_text).text.toString()
                 val fuelCardNumber: String = view.findViewById<TextInputEditText>(R.id.fuel_card_number_edit_text).text.toString()
                 val address: String = view.findViewById<TextInputEditText>(R.id.address_edit_text).text.toString()
                 val color: String = (view.findViewById<Button>(R.id.color_button).background as ColorDrawable).color.toString()
@@ -148,9 +149,9 @@ class CarFragment : Fragment() {
 
                 val json = ObjectMapper().writeValueAsString(
                         try {
-                            Car(carNumber, fuelCardNumber, address, color, status, date, model!!, insurance!!)
+                            Car(number, fuelCardNumber, address, color, status, date, model!!, insurance!!)
                         } catch (e: UninitializedPropertyAccessException) {
-                            Car(carNumber, fuelCardNumber, address, color, status, "2000-03-02", model!!, insurance!!)
+                            Car(number, fuelCardNumber, address, color, status, "2000-03-02", model!!, insurance!!)
                         }
                 )
 
@@ -163,6 +164,17 @@ class CarFragment : Fragment() {
                     loaderManager.initLoader<Car>(CAR_LOADER_ID, bundle, loaderCallbackCar).forceLoad()
                 else
                     loaderManager.restartLoader<Car>(CAR_LOADER_ID, bundle, loaderCallbackCar).forceLoad()
+
+                if (carNumber != null && carNumber != number) {
+                    val deleteBundle = Bundle()
+                    deleteBundle.putString(REQUEST_METHOD_BUNDLE_KEY, "DELETE")
+                    deleteBundle.putString(JSON_BUNDLE_KEY, "")
+                    deleteBundle.putString(REQUEST_URL_BUNDLE_KEY, CAR_REQUEST_URL + carNumber)
+                    if (loaderManager.getLoader<Car>(CAR_EDIT_LOADER_ID) == null)
+                        loaderManager.initLoader<Car>(CAR_EDIT_LOADER_ID, deleteBundle, loaderCallbackCar).forceLoad()
+                    else
+                        loaderManager.restartLoader<Car>(CAR_EDIT_LOADER_ID, deleteBundle, loaderCallbackCar).forceLoad()
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)
