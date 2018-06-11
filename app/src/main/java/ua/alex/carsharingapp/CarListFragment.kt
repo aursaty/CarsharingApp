@@ -7,6 +7,7 @@ import android.content.AsyncTaskLoader
 import android.content.Context
 import android.content.Loader
 import android.os.Bundle
+import android.support.design.widget.FloatingActionButton
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -64,7 +65,15 @@ class CarListFragment : Fragment() {
 //                Car("AA0004AA", "1", "Green Street, 1",
 //                        "green", "true", "11-01-2001", model, insurance)))
 
-        view!!.findViewById<ListView>(R.id.car_list_view).setOnItemClickListener { parent, itemView, position, id ->
+        view!!.findViewById<FloatingActionButton>(R.id.add_car_fab).setOnClickListener {
+            val carFragment = CarFragment()
+            activity.fragmentManager.beginTransaction()
+                    .replace(R.id.content, carFragment, "CarFragment")
+                    .addToBackStack("CarFragment")
+                    .commit()
+        }
+
+        view.findViewById<ListView>(R.id.car_list_view).setOnItemClickListener { parent, itemView, position, id ->
             val carFragment = CarFragment()
             val carNumber = itemView.findViewById<TextView>(R.id.car_number).text as String
             val bundle = Bundle()

@@ -12,4 +12,6 @@
     <string name="creation_date_default">04.10.1999</string>
     <string name="delete_car_label">Delete Car</string>
     <string name="save_changes_label">Save changes</string>
+    <string name="model_label">Model</string>
+    <string name="insurance_label">Insurance</string>
 </resources>

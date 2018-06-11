@@ -12,17 +12,16 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.support.design.widget.TextInputEditText
-import android.support.v7.app.AppCompatActivity
 import android.view.*
-import android.widget.Button
-import android.widget.Switch
-import android.widget.TextView
+import android.widget.*
+import com.fasterxml.jackson.databind.JavaType
 import com.fasterxml.jackson.databind.ObjectMapper
 import ua.alex.carsharingapp.CarListFragment.Companion.CAR_NUMBER_BUNDLE_KEY
 import ua.alex.carsharingapp.MainActivity.Companion.JSON_BUNDLE_KEY
 import ua.alex.carsharingapp.MainActivity.Companion.REQUEST_METHOD_BUNDLE_KEY
 import ua.alex.carsharingapp.MainActivity.Companion.REQUEST_URL_BUNDLE_KEY
 import ua.alex.carsharingapp.data.Car
+import ua.alex.carsharingapp.data.Insurance
 import ua.alex.carsharingapp.data.Model
 import yuku.ambilwarna.AmbilWarnaDialog
 
@@ -40,7 +39,7 @@ class CarFragment : Fragment() {
     lateinit var car: Car
     lateinit var colorButton: Button
 
-    var carNumber = ""
+    var carNumber: String? = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -52,7 +51,11 @@ class CarFragment : Fragment() {
 
         (activity as MainActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        carNumber = arguments.getString(CAR_NUMBER_BUNDLE_KEY)
+        carNumber = try {
+            arguments.getString(CAR_NUMBER_BUNDLE_KEY, "")
+        } catch (e: NullPointerException) {
+            null
+        }
 
         return inflater.inflate(R.layout.fragment_car, container, false)
     }
@@ -81,11 +84,18 @@ class CarFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
-        val bundle = Bundle()
-        bundle.putString(REQUEST_URL_BUNDLE_KEY, CAR_REQUEST_URL + carNumber)
-        bundle.putString(REQUEST_METHOD_BUNDLE_KEY, "GET")
-        bundle.putString(JSON_BUNDLE_KEY, "")
-        loaderManager.initLoader<Car>(0, bundle, loaderCallbackCar).forceLoad()
+        if (carNumber != null) {
+            val bundleCar = Bundle()
+            bundleCar.putString(REQUEST_URL_BUNDLE_KEY, CAR_REQUEST_URL + carNumber)
+            bundleCar.putString(REQUEST_METHOD_BUNDLE_KEY, "GET")
+            bundleCar.putString(JSON_BUNDLE_KEY, "")
+            val bundle = Bundle()
+            bundle.putString(REQUEST_URL_BUNDLE_KEY, CAR_REQUEST_URL + carNumber)
+            bundle.putString(REQUEST_METHOD_BUNDLE_KEY, "GET")
+            bundle.putString(JSON_BUNDLE_KEY, "")
+            loaderManager.initLoader<Car>(0, bundle, loaderCallbackCar).forceLoad()
+//        loaderManager.initLoader<List<Model>>(0, bundle, loaderCallbackModelList).forceLoad()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -117,11 +127,15 @@ class CarFragment : Fragment() {
                 val color: String = (view.findViewById<Button>(R.id.color_button).background as ColorDrawable).color.toString()
                 val status = view.findViewById<Switch>(R.id.status_switch).isChecked
                 val date = view.findViewById<TextView>(R.id.date_text_view).text.toString()
-                val model = view.findViewById<TextView>(R.id.model_text_view).text
-                val insurance = view.findViewById<TextView>(R.id.insurance_text_view).text
 
                 val json = ObjectMapper().writeValueAsString(
-                        Car(carNumber, fuelCardNumber, address, color, status, car.creatingDate, car.model, car.insurance)
+                        try {
+                            Car(carNumber, fuelCardNumber, address, color, status, date, car.model, car.insurance)
+                        } catch (e: UninitializedPropertyAccessException) {
+                            Car(carNumber, fuelCardNumber, address, color, status, "2000-03-02",
+                                    Model("model_name1", "Ford", 100.0, 10.0, "passengerCar"),
+                                    Insurance("series1", "2007-03-01", "2020-03-02", "address1", "IN1", "company1"))
+                        }
                 )
 
                 val bundle = Bundle()
@@ -144,10 +158,18 @@ class CarFragment : Fragment() {
         view.findViewById<TextInputEditText>(R.id.fuel_card_number_edit_text).setText(car.fuelCardNumber)
         view.findViewById<TextInputEditText>(R.id.address_edit_text).setText(car.address)
         view.findViewById<Button>(R.id.color_button).setBackgroundColor(Integer.parseInt(car.color))
+        view.findViewById<Switch>(R.id.status_switch).isChecked = car.status
+        view.findViewById<TextView>(R.id.date_text_view).text = car.creatingDate
+//        view.findViewById<TextView>(R.id.model_text_view).text = car.model.name
+//        view.findViewById<TextView>(R.id.insurance_text_view).text = car.insurance.series
     }
 
-//    private val loaderCallbackCarList: LoaderManager.LoaderCallbacks<List<Car>> = object : LoaderManager.LoaderCallbacks<List<Car>> {
-//    }
+    private fun updateSpinnerUi(modelList: List<Model>) {
+        view.findViewById<Spinner>(R.id.model_spinner).adapter =
+                ArrayAdapter<String>(activity,
+                        android.R.layout.simple_dropdown_item_1line,
+                        modelList.map { it.name })
+    }
 
     private val loaderCallbackCar: LoaderManager.LoaderCallbacks<Car> = object : LoaderManager.LoaderCallbacks<Car> {
         override fun onCreateLoader(p0: Int, p1: Bundle?): Loader<Car> {
@@ -170,26 +192,23 @@ class CarFragment : Fragment() {
         }
     }
 
-//    private val loaderCallbackCarList: LoaderManager.LoaderCallbacks<List<Model>> = object : LoaderManager.LoaderCallbacks<List<Model>> {
-//        override fun onCreateLoader(p0: Int, p1: Bundle?): Loader<List<Model>> {
-//            return GetCarLoader(activity,
-//                    p1!!.getString(REQUEST_URL_BUNDLE_KEY),
-//                    p1.getString(REQUEST_METHOD_BUNDLE_KEY),
-//                    p1.getString(JSON_BUNDLE_KEY))
-//        }
-//
-//        override fun onLoadFinished(p0: Loader<List<Model>>?, p1: List<Model>?) {
-//            if (p1 != null) {
-//                car = p1
-//                updateUi(p1)
-//            } else {
-//                MyHandle(activity).sendEmptyMessage(1)
-//            }
-//        }
-//
-//        override fun onLoaderReset(p0: Loader<List<Model>>?) {
-//        }
-//    }
+    private val loaderCallbackModelList: LoaderManager.LoaderCallbacks<List<Model>> = object : LoaderManager.LoaderCallbacks<List<Model>> {
+        override fun onCreateLoader(p0: Int, p1: Bundle?): Loader<List<Model>> {
+            return GetModelListLoader(activity,
+                    p1!!.getString(REQUEST_URL_BUNDLE_KEY),
+                    p1.getString(REQUEST_METHOD_BUNDLE_KEY),
+                    p1.getString(JSON_BUNDLE_KEY))
+        }
+
+        override fun onLoadFinished(p0: Loader<List<Model>>?, p1: List<Model>?) {
+            if (p1 != null) {
+                updateSpinnerUi(p1)
+            }
+        }
+
+        override fun onLoaderReset(p0: Loader<List<Model>>?) {
+        }
+    }
 
     private class MyHandle(val context: Activity) : Handler() {
         override fun handleMessage(msg: Message) {
@@ -211,16 +230,14 @@ class CarFragment : Fragment() {
         }
     }
 
-//    private class GetModelListLoader(context: Context,
-//                               val stringUrl: String,
-//                               val requestMethod: String,
-//                               val stringJson: String) : AsyncTaskLoader<List<Model>>(context) {
-//        override fun loadInBackground(): List<Model> {
-//            val carJson = QueryUtils.fetchData(stringUrl, requestMethod, stringJson)
-//            return if (carJson == "")
-//                return null
-//            else
-//                ObjectMapper().readValue(carJson, Car::class.java)
-//        }
-//    }
+    private class GetModelListLoader(context: Context,
+                                     val stringUrl: String,
+                                     val requestMethod: String,
+                                     val stringJson: String) : AsyncTaskLoader<List<Model>>(context) {
+        override fun loadInBackground(): List<Model> {
+            val carJson = QueryUtils.fetchData(stringUrl, requestMethod, stringJson)
+            val type: JavaType = ObjectMapper().typeFactory.constructParametricType(List::class.java, Model::class.java)
+            return ObjectMapper().readValue(carJson, type)
+        }
+    }
 }
