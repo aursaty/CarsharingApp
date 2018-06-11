@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">CarsharingApp</string>
 
     <!--TO Remove or change this placeholder text -->
@@ -9,7 +9,7 @@
     <string name="color">Color</string>
     <string name="status__label">Status</string>
     <string name="creation_date_label">Creation date</string>
-    <string name="creation_date_default">04.10.1999</string>
+    <string name="creation_date_default" tools:ignore="TypographyDashes">2000-03-01</string>
     <string name="delete_car_label">Delete Car</string>
     <string name="save_changes_label">Save changes</string>
     <string name="model_label">Model</string>

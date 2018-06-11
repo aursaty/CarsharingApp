@@ -41,6 +41,8 @@ class CarFragment : Fragment() {
         private const val PUT_CAR_REQUEST_URL = "/api/cars"
     }
 
+    lateinit var modelList: List<Model>
+    lateinit var insuranceList: List<Insurance>
     lateinit var car: Car
     lateinit var colorButton: Button
 
@@ -89,25 +91,26 @@ class CarFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
+        val bundleModelList = Bundle()
+        bundleModelList.putString(REQUEST_URL_BUNDLE_KEY, MODEL_LIST_REQUEST_URL)
+        bundleModelList.putString(REQUEST_METHOD_BUNDLE_KEY, "GET")
+        bundleModelList.putString(JSON_BUNDLE_KEY, "")
+
+        val bundleInsuranceList = Bundle()
+        bundleInsuranceList.putString(REQUEST_URL_BUNDLE_KEY, INSURANCE_LIST_REQUEST_URL)
+        bundleInsuranceList.putString(REQUEST_METHOD_BUNDLE_KEY, "GET")
+        bundleInsuranceList.putString(JSON_BUNDLE_KEY, "")
+
+        loaderManager.initLoader<List<Model>>(MODEL_LIST_LOADER_ID, bundleModelList, loaderCallbackModelList).forceLoad()
+        loaderManager.initLoader<List<Insurance>>(INSURANCE_LIST_LOADER_ID, bundleInsuranceList, loaderCallbackInsuranceList).forceLoad()
+
         if (carNumber != null) {
             val bundleCar = Bundle()
             bundleCar.putString(REQUEST_URL_BUNDLE_KEY, CAR_REQUEST_URL + carNumber)
             bundleCar.putString(REQUEST_METHOD_BUNDLE_KEY, "GET")
             bundleCar.putString(JSON_BUNDLE_KEY, "")
 
-            val bundleModelList = Bundle()
-            bundleModelList.putString(REQUEST_URL_BUNDLE_KEY, MODEL_LIST_REQUEST_URL)
-            bundleModelList.putString(REQUEST_METHOD_BUNDLE_KEY, "GET")
-            bundleModelList.putString(JSON_BUNDLE_KEY, "")
-
-            val bundleInsuranceList = Bundle()
-            bundleInsuranceList.putString(REQUEST_URL_BUNDLE_KEY, INSURANCE_LIST_REQUEST_URL)
-            bundleInsuranceList.putString(REQUEST_METHOD_BUNDLE_KEY, "GET")
-            bundleInsuranceList.putString(JSON_BUNDLE_KEY, "")
-
             loaderManager.initLoader<Car>(CAR_LOADER_ID, bundleCar, loaderCallbackCar).forceLoad()
-            loaderManager.initLoader<List<Model>>(MODEL_LIST_LOADER_ID, bundleModelList, loaderCallbackModelList).forceLoad()
-            loaderManager.initLoader<List<Insurance>>(INSURANCE_LIST_LOADER_ID, bundleInsuranceList, loaderCallbackInsuranceList).forceLoad()
         }
     }
 
@@ -140,14 +143,14 @@ class CarFragment : Fragment() {
                 val color: String = (view.findViewById<Button>(R.id.color_button).background as ColorDrawable).color.toString()
                 val status = view.findViewById<Switch>(R.id.status_switch).isChecked
                 val date = view.findViewById<TextView>(R.id.date_text_view).text.toString()
+                val model = modelList.find { it.name == (view.findViewById<Spinner>(R.id.model_spinner).selectedItem as String) }
+                val insurance = insuranceList.find { it.series == (view.findViewById<Spinner>(R.id.insurance_spinner).selectedItem as String) }
 
                 val json = ObjectMapper().writeValueAsString(
                         try {
-                            Car(carNumber, fuelCardNumber, address, color, status, date, car.model, car.insurance)
+                            Car(carNumber, fuelCardNumber, address, color, status, date, model!!, insurance!!)
                         } catch (e: UninitializedPropertyAccessException) {
-                            Car(carNumber, fuelCardNumber, address, color, status, "2000-03-02",
-                                    Model("model_name1", "Ford", 100.0, 10.0, "passengerCar"),
-                                    Insurance("series1", "2007-03-01", "2020-03-02", "address1", "IN1", "company1"))
+                            Car(carNumber, fuelCardNumber, address, color, status, "2000-03-02", model!!, insurance!!)
                         }
                 )
 
@@ -173,6 +176,14 @@ class CarFragment : Fragment() {
         view.findViewById<Button>(R.id.color_button).setBackgroundColor(Integer.parseInt(car.color))
         view.findViewById<Switch>(R.id.status_switch).isChecked = car.status
         view.findViewById<TextView>(R.id.date_text_view).text = car.creatingDate
+        for (i in 0 until view.findViewById<Spinner>(R.id.model_spinner).count) {
+            if (view.findViewById<Spinner>(R.id.model_spinner).getItemAtPosition(i) == car.model.name)
+                view.findViewById<Spinner>(R.id.model_spinner).setSelection(i)
+        }
+        for (j in 0 until view.findViewById<Spinner>(R.id.insurance_spinner).count) {
+            if (view.findViewById<Spinner>(R.id.insurance_spinner).getItemAtPosition(j) == car.insurance.series)
+                view.findViewById<Spinner>(R.id.insurance_spinner).setSelection(j)
+        }
     }
 
     private fun updateModelSpinnerUi(modelList: List<Model>) {
@@ -220,6 +231,7 @@ class CarFragment : Fragment() {
 
         override fun onLoadFinished(p0: Loader<List<Model>>?, p1: List<Model>?) {
             if (p1 != null) {
+                modelList = p1
                 updateModelSpinnerUi(p1)
             }
         }
@@ -238,6 +250,7 @@ class CarFragment : Fragment() {
 
         override fun onLoadFinished(p0: Loader<List<Insurance>>?, p1: List<Insurance>?) {
             if (p1 != null) {
+                insuranceList = p1
                 updateInsuranceSpinnerUi(p1)
             }
         }
@@ -278,9 +291,9 @@ class CarFragment : Fragment() {
     }
 
     private class GetInsuranceListLoader(context: Context,
-                                     val stringUrl: String,
-                                     val requestMethod: String,
-                                     val stringJson: String) : AsyncTaskLoader<List<Insurance>>(context) {
+                                         val stringUrl: String,
+                                         val requestMethod: String,
+                                         val stringJson: String) : AsyncTaskLoader<List<Insurance>>(context) {
         override fun loadInBackground(): List<Insurance> {
             val carJson = QueryUtils.fetchData(stringUrl, requestMethod, stringJson)
             val type: JavaType = ObjectMapper().typeFactory.constructParametricType(List::class.java, Insurance::class.java)
