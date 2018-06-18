@@ -28,14 +28,9 @@ import ua.alex.carsharingapp.data.Car
 class CarListFragment : Fragment() {
     companion object {
         const val CAR_NUMBER_BUNDLE_KEY = "CAR_NUMBER_BUNDLE_KEY"
-        //        private val CAR_REQUEST_URL = "http://localhost:8080/api/cars/getAllCars"
-//        private val CAR_REQUEST_URL = "http://192.168.1.138:8080/api/cars/getAllCars"
-//        private val CAR_REQUEST_URL = "http://172.16.11.66:8080/api/cars/getAllCars"
-        private const val CAR_LIST_REQUEST_URL = "/api/cars/getAllCars"
-//        private val CAR_REQUEST_URL = "https://www.googleapis.com/books/v1/volumes?q=s&maxResults=10"
-    }
 
-    private var carNumber = ""
+        private const val CAR_LIST_REQUEST_URL = "/api/cars/getAllCars"
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {

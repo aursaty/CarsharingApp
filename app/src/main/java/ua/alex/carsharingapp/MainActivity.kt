@@ -2,12 +2,14 @@ package ua.alex.carsharingapp
 
 import android.app.Fragment
 import android.os.Bundle
+import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -35,12 +37,24 @@ class MainActivity : AppCompatActivity() {
                 toolbar,
                 R.string.drawer_open,
                 R.string.drawer_close
-        ){
+        ) {
 
         }
         drawerToggle.isDrawerIndicatorEnabled = true
         drawerLayout.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
+
+        nvView.setNavigationItemSelectedListener {
+            var navFragment: Fragment? = null
+            when (it.itemId) {
+                R.id.nav_cars -> navFragment = CarListFragment()
+                R.id.nav_models -> navFragment = ModelListFragment()
+            }
+            if (navFragment != null)
+                fragmentManager.beginTransaction().replace(R.id.content, navFragment).commit()
+            drawerLayout.closeDrawer(GravityCompat.START)
+            true
+        }
 
         val fragment: Fragment = CarListFragment()
         fragmentManager.beginTransaction().add(R.id.content, fragment).commit()

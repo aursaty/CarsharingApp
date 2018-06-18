@@ -6,14 +6,14 @@
             android:id="@+id/nav_cars"
             android:title="@string/cars_menu_drawer_item" />
         <item
+            android:id="@+id/nav_models"
+            android:title="@string/model_menu_drawer_item" />
+        <item
             android:id="@+id/nav_clients"
             android:title="@string/clients_menu_drawer_item" />
         <item
             android:id="@+id/nav_operators"
             android:title="@string/operators_menu_drawer_item" />
-        <item
-            android:id="@+id/nav_models"
-            android:title="@string/model_menu_drawer_item" />
         <item
             android:id="@+id/insurances"
             android:title="@string/insurance_menu_drawer_item" />
