@@ -15,10 +15,10 @@
             android:id="@+id/nav_operators"
             android:title="@string/operators_menu_drawer_item" />
         <item
-            android:id="@+id/insurances"
+            android:id="@+id/nav_insurances"
             android:title="@string/insurance_menu_drawer_item" />
         <item
-            android:id="@+id/contracts"
+            android:id="@+id/nav_contracts"
             android:title="@string/contract_menu_drawer_item" />
     </group>
 </menu>
