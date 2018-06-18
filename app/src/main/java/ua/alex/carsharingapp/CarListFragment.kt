@@ -40,7 +40,7 @@ class CarListFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        (activity as MainActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(false)
+//        (activity as MainActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(false)
         return inflater.inflate(R.layout.fragment_car_list, container, false)
     }
 

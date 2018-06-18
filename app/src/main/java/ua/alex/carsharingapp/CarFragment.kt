@@ -57,7 +57,7 @@ class CarFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
 
-        (activity as MainActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+//        (activity as MainActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         carNumber = try {
             arguments.getString(CAR_NUMBER_BUNDLE_KEY, "")

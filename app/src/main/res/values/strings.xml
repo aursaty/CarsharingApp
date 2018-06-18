@@ -14,4 +14,12 @@
     <string name="save_changes_label">Save changes</string>
     <string name="model_label">Model</string>
     <string name="insurance_label">Insurance</string>
+    <string name="cars_menu_drawer_item">Cars</string>
+    <string name="clients_menu_drawer_item">Clients</string>
+    <string name="operators_menu_drawer_item">Operators</string>
+    <string name="model_menu_drawer_item">Models</string>
+    <string name="insurance_menu_drawer_item">Insurances</string>
+    <string name="contract_menu_drawer_item">Contracts</string>
+    <string name="drawer_open">open</string>
+    <string name="drawer_close">close</string>
 </resources>

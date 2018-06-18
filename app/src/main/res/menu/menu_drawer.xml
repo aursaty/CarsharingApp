@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_cars"
+            android:title="@string/cars_menu_drawer_item" />
+        <item
+            android:id="@+id/nav_clients"
+            android:title="@string/clients_menu_drawer_item" />
+        <item
+            android:id="@+id/nav_operators"
+            android:title="@string/operators_menu_drawer_item" />
+        <item
+            android:id="@+id/nav_models"
+            android:title="@string/model_menu_drawer_item" />
+        <item
+            android:id="@+id/insurances"
+            android:title="@string/insurance_menu_drawer_item" />
+        <item
+            android:id="@+id/contracts"
+            android:title="@string/contract_menu_drawer_item" />
+    </group>
+</menu>
