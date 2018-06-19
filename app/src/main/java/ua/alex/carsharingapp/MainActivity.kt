@@ -52,6 +52,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_insurances -> navFragment = InsuranceListFragment()
                 R.id.nav_clients -> navFragment = ClientListFragment()
                 R.id.nav_operators -> navFragment = OperatorListFragment()
+                R.id.nav_contracts -> navFragment = ContractListFragment()
             }
             if (navFragment != null)
                 fragmentManager.beginTransaction().replace(R.id.content, navFragment).commit()
