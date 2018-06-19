@@ -1,13 +1,13 @@
 package ua.alex.carsharingapp
 
 
+import android.app.Fragment
 import android.app.LoaderManager
 import android.content.AsyncTaskLoader
 import android.content.Context
 import android.content.Loader
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
-import android.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,20 +16,20 @@ import android.widget.ListView
 import android.widget.TextView
 import com.fasterxml.jackson.databind.JavaType
 import com.fasterxml.jackson.databind.ObjectMapper
-import ua.alex.carsharingapp.data.Client
+import ua.alex.carsharingapp.data.Operator
 
-class ClientListFragment : Fragment() {
+class OperatorListFragment : Fragment() {
 
     companion object {
-        const val CLIENT_NUMBER_BUNDLE_KEY = "CLIENT_NUMBER_BUNDLE_KEY"
+        const val OPERATOR_NUMBER_BUNDLE_KEY = "OPERATOR_NUMBER_BUNDLE_KEY"
 
-        private const val CLIENT_LIST_REQUEST_URL = "/api/clients/getAllClients"
+        private const val OPERATOR_LIST_REQUEST_URL = "/api/operators/getAllOperators"
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_client_list, container, false)
+        return inflater.inflate(R.layout.fragment_operator_list, container, false)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -53,7 +53,7 @@ class ClientListFragment : Fragment() {
 //                Car("AA0004AA", "1", "Green Street, 1",
 //                        "green", "true", "11-01-2001", model, insurance)))
 
-        view!!.findViewById<FloatingActionButton>(R.id.add_client_fab).setOnClickListener {
+        view!!.findViewById<FloatingActionButton>(R.id.add_operator_fab).setOnClickListener {
             //TODO
 //            val carFragment = CarFragment()
 //            activity.fragmentManager.beginTransaction()
@@ -62,7 +62,7 @@ class ClientListFragment : Fragment() {
 //                    .commit()
         }
 
-        view.findViewById<ListView>(R.id.client_list_view).setOnItemClickListener { parent, itemView, position, id ->
+        view.findViewById<ListView>(R.id.operator_list_view).setOnItemClickListener { parent, itemView, position, id ->
             //TODO
 //            val carFragment = CarFragment()
 //            val carNumber = itemView.findViewById<TextView>(R.id.car_number).text as String
@@ -81,63 +81,60 @@ class ClientListFragment : Fragment() {
 
         val bundle = Bundle()
         bundle.putString(MainActivity.REQUEST_METHOD_BUNDLE_KEY, "GET")
-        bundle.putString(MainActivity.REQUEST_URL_BUNDLE_KEY, CLIENT_LIST_REQUEST_URL)
+        bundle.putString(MainActivity.REQUEST_URL_BUNDLE_KEY, OPERATOR_LIST_REQUEST_URL)
         bundle.putString(MainActivity.JSON_BUNDLE_KEY, "")
-        loaderManager.initLoader<List<Client>>(0, bundle, loaderCallback).forceLoad()
+        loaderManager.initLoader<List<Operator>>(0, bundle, loaderCallback).forceLoad()
     }
 
     //
 //
-    private fun updateUi(list: List<Client>) {
-        val listView = view.findViewById<ListView>(R.id.client_list_view)
+    private fun updateUi(list: List<Operator>) {
+        val listView = view.findViewById<ListView>(R.id.operator_list_view)
 
-        val adapter = ClientAdapter(activity, list)
+        val adapter = OperatorAdapter(activity, list)
 
         listView.adapter = adapter
     }
 
-    private val loaderCallback: LoaderManager.LoaderCallbacks<List<Client>> = object : LoaderManager.LoaderCallbacks<List<Client>> {
-        override fun onCreateLoader(p0: Int, p1: Bundle?): Loader<List<Client>> {
-            return ClientsLoader(activity, p1!!.getString(MainActivity.REQUEST_URL_BUNDLE_KEY))
+    private val loaderCallback: LoaderManager.LoaderCallbacks<List<Operator>> = object : LoaderManager.LoaderCallbacks<List<Operator>> {
+        override fun onCreateLoader(p0: Int, p1: Bundle?): Loader<List<Operator>> {
+            return OperatorsLoader(activity, p1!!.getString(MainActivity.REQUEST_URL_BUNDLE_KEY))
         }
 
-        override fun onLoadFinished(p0: Loader<List<Client>>?, p1: List<Client>?) {
+        override fun onLoadFinished(p0: Loader<List<Operator>>?, p1: List<Operator>?) {
             updateUi(p1!!)
         }
 
-        override fun onLoaderReset(p0: Loader<List<Client>>?) {
+        override fun onLoaderReset(p0: Loader<List<Operator>>?) {
         }
     }
 
-    private class ClientsLoader(context: Context, val stringUrl: String) : AsyncTaskLoader<List<Client>>(context) {
-        override fun loadInBackground(): List<Client> {
-            val type: JavaType = ObjectMapper().typeFactory.constructParametricType(List::class.java, Client::class.java)
+    private class OperatorsLoader(context: Context, val stringUrl: String) : AsyncTaskLoader<List<Operator>>(context) {
+        override fun loadInBackground(): List<Operator> {
+            val type: JavaType = ObjectMapper().typeFactory.constructParametricType(List::class.java, Operator::class.java)
             val json = QueryUtils.fetchData(stringUrl, "GET", "")
             return ObjectMapper().readValue(json, type)
         }
 
     }
 
-    private class ClientAdapter(context: Context, objects: List<Client>) :
-            ArrayAdapter<Client>(context, 0, objects) {
+    private class OperatorAdapter(context: Context, objects: List<Operator>) :
+            ArrayAdapter<Operator>(context, 0, objects) {
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
             var listItemView = convertView
             if (listItemView == null)
                 listItemView = LayoutInflater.from(context).inflate(R.layout.client_list_item_view, parent, false)
 
-            val client = getItem(position)
+            val operator = getItem(position)
 
-            listItemView!!.findViewById<TextView>(R.id.licence).text = client.licenseNumber
-            listItemView.findViewById<TextView>(R.id.number).text = client.phoneNumber
-            listItemView.findViewById<TextView>(R.id.name).text = client.fullName
-            listItemView.findViewById<TextView>(R.id.address).text = client.address
+            listItemView!!.findViewById<TextView>(R.id.name).text = operator.fullName
+            listItemView.findViewById<TextView>(R.id.number).text = operator.phoneNumber
 
             return listItemView
         }
-
-
     }
 
-
 }
+
+

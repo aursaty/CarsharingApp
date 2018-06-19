@@ -13,7 +13,7 @@ import java.nio.charset.Charset
 class QueryUtils {
 
     companion object {
-        private const val SERVER_ADDRESS = "http://192.168.1.138:8080"
+        private const val SERVER_ADDRESS = "http://192.168.1.177:8080"
         private val LOG_TAG = QueryUtils::class.java.simpleName
 
         fun fetchData(requestString: String, requestMethod: String, stringJson: String): String {
