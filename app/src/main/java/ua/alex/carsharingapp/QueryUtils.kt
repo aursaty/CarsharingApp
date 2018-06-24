@@ -9,16 +9,18 @@ import java.net.HttpURLConnection
 import java.net.MalformedURLException
 import java.net.URL
 import java.nio.charset.Charset
+import java.time.LocalDateTime
 
 class QueryUtils {
 
     companion object {
-        private const val SERVER_ADDRESS = "http://192.168.0.148:8080"
+        private const val SERVER_ADDRESS = "http://192.168.1.138:8080"
+//        private const val SERVER_ADDRESS = "http://127.0.0.1:8080"
         private val LOG_TAG = QueryUtils::class.java.simpleName
 
-        fun fetchData(requestString: String, requestMethod: String, stringJson: String): String {
+        fun fetchData(requestString: String, requestMethod: String, stringJson: String): String? {
             val url = createUrl(SERVER_ADDRESS + requestString)
-            return makeHttpRequest(url, requestMethod, stringJson)!!
+            return makeHttpRequest(url, requestMethod, stringJson)
         }
 
         private fun makeHttpRequest(url: URL?, method: String, json: String): String? {
@@ -59,7 +61,7 @@ class QueryUtils {
 //                if (!isCancelled) {
 //                    cancel(true)
 //                }
-                return null
+                return ""
             } finally {
                 if (urlConnection != null) {
                     urlConnection.disconnect()

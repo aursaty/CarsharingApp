@@ -1,23 +1,24 @@
 package ua.alex.carsharingapp.data
 
+import android.os.Build
+import android.support.annotation.RequiresApi
 import com.fasterxml.jackson.annotation.JsonIgnore
 import java.time.LocalDateTime
 import java.util.*
 
-data class Contract (
+@RequiresApi(Build.VERSION_CODES.O)
+data class Contract
+(
 
         val id: String = "",
 
 //        val startDateTime: LocalDateTime = LocalDateTime.ofInstant((Calendar.getInstance() as Calendar).toInstant(), Calendar.getInstance().timeZone.toZoneId()),
 
-        @JsonIgnore
-        val startDateTime: Any? = null,
+        val startDateTime: String = "",
 
-        @JsonIgnore
-        val endDateTime: Any? = null,
+        val endDateTime: String = "",
 
-        @JsonIgnore
-        val realDateTime: Any? = null,
+        val realDateTime: String = "",
 
         val returnAddress: String? = "",
 

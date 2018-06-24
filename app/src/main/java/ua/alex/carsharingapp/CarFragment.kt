@@ -284,7 +284,7 @@ class CarFragment : Fragment() {
                                val stringJson: String) : AsyncTaskLoader<Car>(context) {
         override fun loadInBackground(): Car? {
             val carJson = QueryUtils.fetchData(stringUrl, requestMethod, stringJson)
-            return if (carJson == "")
+            return if (carJson == "" || carJson == null)
                 return null
             else
                 ObjectMapper().readValue(carJson, Car::class.java)

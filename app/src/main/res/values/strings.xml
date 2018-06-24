@@ -5,7 +5,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="car_number_label">Car number</string>
     <string name="fuel_card_number_label">Fuel card number</string>
-    <string name="address_label">Address</string>
     <string name="color">Color</string>
     <string name="status__label">Status</string>
     <string name="creation_date_label">Creation date</string>
@@ -22,4 +21,9 @@
     <string name="contract_menu_drawer_item">Contracts</string>
     <string name="drawer_open">open</string>
     <string name="drawer_close">close</string>
+    <string name="licence_number_label">Licence number</string>
+    <string name="full_name_label">Full name</string>
+    <string name="credit_card_number_label">Credit card number</string>
+    <string name="birthday_label">Birthday</string>
+    <string name="address_label">Address</string>
 </resources>

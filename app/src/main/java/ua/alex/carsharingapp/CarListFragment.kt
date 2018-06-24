@@ -90,6 +90,10 @@ class CarListFragment : Fragment() {
         bundle.putString(REQUEST_URL_BUNDLE_KEY, CAR_LIST_REQUEST_URL)
         bundle.putString(JSON_BUNDLE_KEY, "")
         loaderManager.initLoader<List<Car>>(0, bundle, loaderCallbackCarList).forceLoad()
+        if (loaderManager.getLoader<List<Car>>(0) == null)
+            loaderManager.initLoader<List<Car>>(0, bundle, loaderCallbackCarList).forceLoad()
+        else
+            loaderManager.restartLoader<List<Car>>(0, bundle, loaderCallbackCarList).forceLoad()
     }
 
     //
@@ -119,7 +123,10 @@ class CarListFragment : Fragment() {
         override fun loadInBackground(): List<Car> {
             val type: JavaType = ObjectMapper().typeFactory.constructParametricType(List::class.java, Car::class.java)
             val carsJson = QueryUtils.fetchData(stringUrl, "GET", "")
-            return ObjectMapper().readValue(carsJson, type)
+            return if (carsJson != "")
+                ObjectMapper().readValue(carsJson, type)
+            else
+                emptyList()
         }
 
     }
