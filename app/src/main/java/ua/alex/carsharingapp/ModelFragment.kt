@@ -95,39 +95,37 @@ class ModelFragment : Fragment() {
                 true
             }
             R.id.save_car_item_menu -> {
-//                val licence = view.findViewById<TextInputEditText>(R.id.licence_number_edit_text).text.toString()
-//                val fullName = view.findViewById<TextInputEditText>(R.id.full_name_edit_text).text.toString()
-//                val creditCardNumber = view.findViewById<TextInputEditText>(R.id.credit_card_edit_text).text.toString()
-//                val address = view.findViewById<TextInputEditText>(R.id.address_edit_text).text.toString()
-//                val phoneNumber = view.findViewById<TextInputEditText>(R.id.phone_edit_text).text.toString()
-//                val birthday = view.findViewById<TextView>(R.id.birthday_text_view).text.toString()
-//                val registrationDate = view.findViewById<TextView>(R.id.date_text_view).text.toString()
-//
-//                val json = ObjectMapper().writeValueAsString(
-//                        Client(licence, fullName, creditCardNumber, birthday, address, registrationDate, phoneNumber)
-//                )
-//
-//                val bundle = Bundle()
-//                bundle.putString(MainActivity.REQUEST_METHOD_BUNDLE_KEY, "PUT")
-//                bundle.putString(MainActivity.JSON_BUNDLE_KEY, json)
-//                bundle.putString(MainActivity.REQUEST_URL_BUNDLE_KEY, PUT_CAR_REQUEST_URL)
-//
-//                if (loaderManager.getLoader<Client>(LOADER_ID) == null)
-//                    loaderManager.initLoader<Client>(LOADER_ID, bundle, loaderCallbackModel).forceLoad()
-//                else
-//                    loaderManager.restartLoader<Client>(LOADER_ID, bundle, loaderCallbackModel).forceLoad()
-//
-//                if (modelName != null && modelName != licence) {
-//                    val deleteBundle = Bundle()
-//                    deleteBundle.putString(MainActivity.REQUEST_METHOD_BUNDLE_KEY, "DELETE")
-//                    deleteBundle.putString(MainActivity.JSON_BUNDLE_KEY, "")
-//                    deleteBundle.putString(MainActivity.REQUEST_URL_BUNDLE_KEY, MODEL_REQUEST_URL + modelName)
-//
-//                    if (loaderManager.getLoader<Client>(EDIT_LOADER_ID) == null)
-//                        loaderManager.initLoader<Client>(EDIT_LOADER_ID, deleteBundle, loaderCallbackModel).forceLoad()
-//                    else
-//                        loaderManager.restartLoader<Client>(EDIT_LOADER_ID, deleteBundle, loaderCallbackModel).forceLoad()
-//                }
+                val name = view.findViewById<TextInputEditText>(R.id.model_name_edit_text).text.toString()
+                val brand = view.findViewById<TextInputEditText>(R.id.brand_edit_text).text.toString()
+                val cost = view.findViewById<TextInputEditText>(R.id.cost_edit_text).text.toString()
+                val waitingCost = view.findViewById<TextInputEditText>(R.id.waiting_cost_edit_text).text.toString()
+                val type = view.findViewById<TextInputEditText>(R.id.type_edit_text).text.toString()
+
+                val json = ObjectMapper().writeValueAsString(
+                        Model(name, brand, cost.toDouble(), waitingCost.toDouble(), type)
+                )
+
+                val bundle = Bundle()
+                bundle.putString(MainActivity.REQUEST_METHOD_BUNDLE_KEY, "PUT")
+                bundle.putString(MainActivity.JSON_BUNDLE_KEY, json)
+                bundle.putString(MainActivity.REQUEST_URL_BUNDLE_KEY, PUT_CAR_REQUEST_URL)
+
+                if (loaderManager.getLoader<Model>(LOADER_ID) == null)
+                    loaderManager.initLoader<Model>(LOADER_ID, bundle, loaderCallbackModel).forceLoad()
+                else
+                    loaderManager.restartLoader<Model>(LOADER_ID, bundle, loaderCallbackModel).forceLoad()
+
+                if (modelName != null && modelName != name) {
+                    val deleteBundle = Bundle()
+                    deleteBundle.putString(MainActivity.REQUEST_METHOD_BUNDLE_KEY, "DELETE")
+                    deleteBundle.putString(MainActivity.JSON_BUNDLE_KEY, "")
+                    deleteBundle.putString(MainActivity.REQUEST_URL_BUNDLE_KEY, MODEL_REQUEST_URL + modelName)
+
+                    if (loaderManager.getLoader<Model>(EDIT_LOADER_ID) == null)
+                        loaderManager.initLoader<Model>(EDIT_LOADER_ID, deleteBundle, loaderCallbackModel).forceLoad()
+                    else
+                        loaderManager.restartLoader<Model>(EDIT_LOADER_ID, deleteBundle, loaderCallbackModel).forceLoad()
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)
