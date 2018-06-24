@@ -26,4 +26,9 @@
     <string name="credit_card_number_label">Credit card number</string>
     <string name="birthday_label">Birthday</string>
     <string name="address_label">Address</string>
+    <string name="type_label">Type</string>
+    <string name="waiting_cost_label">Waiting cost</string>
+    <string name="cost_label">Cost</string>
+    <string name="brand_label">Brand</string>
+    <string name="model_name_label">Model name</string>
 </resources>

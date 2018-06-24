@@ -54,25 +54,23 @@ class ModelListFragment : Fragment() {
 //                        "green", "true", "11-01-2001", model, insurance)))
 
         view!!.findViewById<FloatingActionButton>(R.id.add_model_fab).setOnClickListener {
-            //TODO
-//            val carFragment = CarFragment()
-//            activity.fragmentManager.beginTransaction()
-//                    .replace(R.id.content, carFragment, "CarFragment")
-//                    .addToBackStack("CarFragment")
-//                    .commit()
+            val modelFragment = ModelFragment()
+            activity.fragmentManager.beginTransaction()
+                    .replace(R.id.content, modelFragment, "ModelFragment")
+                    .addToBackStack("ModelFragment")
+                    .commit()
         }
 
         view.findViewById<ListView>(R.id.model_list_view).setOnItemClickListener { parent, itemView, position, id ->
-            //TODO
-//            val carFragment = CarFragment()
-//            val carNumber = itemView.findViewById<TextView>(R.id.car_number).text as String
-//            val bundle = Bundle()
-//            bundle.putString(MODEL_NUMBER_BUNDLE_KEY, carNumber)
-//            carFragment.arguments = bundle
-//            activity.fragmentManager.beginTransaction()
-//                    .replace(R.id.content, carFragment, "CarFragment")
-//                    .addToBackStack("CarFragment")
-//                    .commit()
+            val modelFragment = ModelFragment()
+            val model = itemView.findViewById<TextView>(R.id.model).text as String
+            val bundle = Bundle()
+            bundle.putString(MODEL_NUMBER_BUNDLE_KEY, model)
+            modelFragment.arguments = bundle
+            activity.fragmentManager.beginTransaction()
+                    .replace(R.id.content, modelFragment, "ModelFragment")
+                    .addToBackStack("ModelFragment")
+                    .commit()
         }
     }
 
