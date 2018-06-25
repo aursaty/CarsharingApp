@@ -82,48 +82,47 @@ class OperatorFragment : Fragment() {
                 true
             }
             R.id.delete_car_item_menu -> {
-//                val deleteBundle = Bundle()
-//                deleteBundle.putString(MainActivity.REQUEST_METHOD_BUNDLE_KEY, "DELETE")
-//                deleteBundle.putString(MainActivity.JSON_BUNDLE_KEY, "")
-//                deleteBundle.putString(MainActivity.REQUEST_URL_BUNDLE_KEY, OPERATOR_REQUEST_URL + operatorId)
-//                if (loaderManager.getLoader<Model>(LOADER_ID) == null)
-//                    loaderManager.initLoader<Model>(LOADER_ID, deleteBundle, loaderCallbackOperator).forceLoad()
-//                else
-//                    loaderManager.restartLoader<Model>(LOADER_ID, deleteBundle, loaderCallbackOperator).forceLoad()
-//                true
-//            }
-//            R.id.save_car_item_menu -> {
-//                val name = view.findViewById<TextInputEditText>(R.id.model_name_edit_text).text.toString()
-//                val brand = view.findViewById<TextInputEditText>(R.id.brand_edit_text).text.toString()
-//                val cost = view.findViewById<TextInputEditText>(R.id.cost_edit_text).text.toString()
-//                val waitingCost = view.findViewById<TextInputEditText>(R.id.waiting_cost_edit_text).text.toString()
-//                val type = view.findViewById<TextInputEditText>(R.id.type_edit_text).text.toString()
-//
-//                val json = ObjectMapper().writeValueAsString(
-//                        Model(name, brand, cost.toDouble(), waitingCost.toDouble(), type)
-//                )
-//
-//                val bundle = Bundle()
-//                bundle.putString(MainActivity.REQUEST_METHOD_BUNDLE_KEY, "PUT")
-//                bundle.putString(MainActivity.JSON_BUNDLE_KEY, json)
-//                bundle.putString(MainActivity.REQUEST_URL_BUNDLE_KEY, PUT_OPERATOR_REQUEST_URL)
-//
-//                if (loaderManager.getLoader<Model>(LOADER_ID) == null)
-//                    loaderManager.initLoader<Model>(LOADER_ID, bundle, loaderCallbackOperator).forceLoad()
-//                else
-//                    loaderManager.restartLoader<Model>(LOADER_ID, bundle, loaderCallbackOperator).forceLoad()
-//
-//                if (operatorId != null && operatorId != name) {
-//                    val deleteBundle = Bundle()
-//                    deleteBundle.putString(MainActivity.REQUEST_METHOD_BUNDLE_KEY, "DELETE")
-//                    deleteBundle.putString(MainActivity.JSON_BUNDLE_KEY, "")
-//                    deleteBundle.putString(MainActivity.REQUEST_URL_BUNDLE_KEY, OPERATOR_REQUEST_URL + operatorId)
-//
-//                    if (loaderManager.getLoader<Model>(EDIT_LOADER_ID) == null)
-//                        loaderManager.initLoader<Model>(EDIT_LOADER_ID, deleteBundle, loaderCallbackOperator).forceLoad()
-//                    else
-//                        loaderManager.restartLoader<Model>(EDIT_LOADER_ID, deleteBundle, loaderCallbackOperator).forceLoad()
-//                }
+                val deleteBundle = Bundle()
+                deleteBundle.putString(MainActivity.REQUEST_METHOD_BUNDLE_KEY, "DELETE")
+                deleteBundle.putString(MainActivity.JSON_BUNDLE_KEY, "")
+                deleteBundle.putString(MainActivity.REQUEST_URL_BUNDLE_KEY, OPERATOR_REQUEST_URL + operatorId)
+                if (loaderManager.getLoader<Operator>(LOADER_ID) == null)
+                    loaderManager.initLoader<Operator>(LOADER_ID, deleteBundle, loaderCallbackOperator).forceLoad()
+                else
+                    loaderManager.restartLoader<Operator>(LOADER_ID, deleteBundle, loaderCallbackOperator).forceLoad()
+                true
+            }
+            R.id.save_car_item_menu -> {
+                val id = view.findViewById<TextInputEditText>(R.id.id_edit_text).text.toString()
+                val name = view.findViewById<TextInputEditText>(R.id.full_name_edit_text).text.toString()
+                val address = view.findViewById<TextInputEditText>(R.id.address_edit_text).text.toString()
+                val phone = view.findViewById<TextInputEditText>(R.id.phone_number_edit_text).text.toString()
+
+                val json = ObjectMapper().writeValueAsString(
+                        Operator(id, name, address, phone)
+                )
+
+                val bundle = Bundle()
+                bundle.putString(MainActivity.REQUEST_METHOD_BUNDLE_KEY, "PUT")
+                bundle.putString(MainActivity.JSON_BUNDLE_KEY, json)
+                bundle.putString(MainActivity.REQUEST_URL_BUNDLE_KEY, PUT_OPERATOR_REQUEST_URL)
+
+                if (loaderManager.getLoader<Operator>(LOADER_ID) == null)
+                    loaderManager.initLoader<Operator>(LOADER_ID, bundle, loaderCallbackOperator).forceLoad()
+                else
+                    loaderManager.restartLoader<Operator>(LOADER_ID, bundle, loaderCallbackOperator).forceLoad()
+
+                if (operatorId != null && operatorId != id) {
+                    val deleteBundle = Bundle()
+                    deleteBundle.putString(MainActivity.REQUEST_METHOD_BUNDLE_KEY, "DELETE")
+                    deleteBundle.putString(MainActivity.JSON_BUNDLE_KEY, "")
+                    deleteBundle.putString(MainActivity.REQUEST_URL_BUNDLE_KEY, OPERATOR_REQUEST_URL + operatorId)
+
+                    if (loaderManager.getLoader<Operator>(EDIT_LOADER_ID) == null)
+                        loaderManager.initLoader<Operator>(EDIT_LOADER_ID, deleteBundle, loaderCallbackOperator).forceLoad()
+                    else
+                        loaderManager.restartLoader<Operator>(EDIT_LOADER_ID, deleteBundle, loaderCallbackOperator).forceLoad()
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)
