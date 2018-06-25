@@ -54,12 +54,11 @@ class ContractListFragment : Fragment() {
 //                        "green", "true", "11-01-2001", model, insurance)))
 
         view!!.findViewById<FloatingActionButton>(R.id.add_contract_fab).setOnClickListener {
-            //TODO
-//            val carFragment = CarFragment()
-//            activity.fragmentManager.beginTransaction()
-//                    .replace(R.id.content, carFragment, "CarFragment")
-//                    .addToBackStack("CarFragment")
-//                    .commit()
+            val contractFragment = ContractFragment()
+            activity.fragmentManager.beginTransaction()
+                    .replace(R.id.content, contractFragment, "ContractFragment")
+                    .addToBackStack("ContractFragment")
+                    .commit()
         }
 
         view.findViewById<ListView>(R.id.contract_list_view).setOnItemClickListener { parent, itemView, position, id ->

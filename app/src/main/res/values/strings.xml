@@ -9,6 +9,7 @@
     <string name="status__label">Status</string>
     <string name="creation_date_label">Creation date</string>
     <string name="creation_date_default" tools:ignore="TypographyDashes">2000-03-01</string>
+    <string name="creation_date_time_default" tools:ignore="TypographyDashes">2011-04-14T00:00:00</string>
     <string name="delete_car_label">Delete Car</string>
     <string name="save_changes_label">Save changes</string>
     <string name="model_label">Model</string>

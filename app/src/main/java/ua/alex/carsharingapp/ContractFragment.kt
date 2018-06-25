@@ -11,6 +11,8 @@ import android.os.Handler
 import android.os.Message
 import android.support.design.widget.TextInputEditText
 import android.app.Fragment
+import android.os.Build
+import android.support.annotation.RequiresApi
 import android.view.*
 import android.widget.*
 import com.fasterxml.jackson.databind.JavaType
@@ -99,6 +101,7 @@ class ContractFragment : Fragment() {
         super.onCreateOptionsMenu(menu, inflater)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when (item!!.itemId) {
             android.R.id.home -> {
@@ -106,54 +109,54 @@ class ContractFragment : Fragment() {
                 true
             }
             R.id.delete_car_item_menu -> {
-//                val deleteBundle = Bundle()
-//                deleteBundle.putString(MainActivity.REQUEST_METHOD_BUNDLE_KEY, "DELETE")
-//                deleteBundle.putString(MainActivity.JSON_BUNDLE_KEY, "")
-//                deleteBundle.putString(MainActivity.REQUEST_URL_BUNDLE_KEY, CAR_REQUEST_URL + contractId)
-//                if (loaderManager.getLoader<Car>(CAR_LOADER_ID) == null)
-//                    loaderManager.initLoader<Car>(CAR_LOADER_ID, deleteBundle, loaderCallbackContract).forceLoad()
-//                else
-//                    loaderManager.restartLoader<Car>(CAR_LOADER_ID, deleteBundle, loaderCallbackContract).forceLoad()
-//                true
-//            }
-//            R.id.save_car_item_menu -> {
-//                val number: String = view.findViewById<TextInputEditText>(R.id.card_number_edit_text).text.toString()
-//                val fuelCardNumber: String = view.findViewById<TextInputEditText>(R.id.fuel_card_number_edit_text).text.toString()
-//                val address: String = view.findViewById<TextInputEditText>(R.id.address_edit_text).text.toString()
-//                val color: String = (view.findViewById<Button>(R.id.color_button).background as ColorDrawable).color.toString()
-//                val status = view.findViewById<Switch>(R.id.status_switch).isChecked
-//                val date = view.findViewById<TextView>(R.id.date_text_view).text.toString()
-//                val model = modelList.find { it.name == (view.findViewById<Spinner>(R.id.model_spinner).selectedItem as String) }
-//                val insurance = insuranceList.find { it.series == (view.findViewById<Spinner>(R.id.insurance_spinner).selectedItem as String) }
-//
-//                val json = ObjectMapper().writeValueAsString(
-//                        try {
-//                            Car(number, fuelCardNumber, address, color, status, date, model!!, insurance!!)
-//                        } catch (e: UninitializedPropertyAccessException) {
-//                            Car(number, fuelCardNumber, address, color, status, "2000-03-02", model!!, insurance!!)
-//                        }
-//                )
-//
-//                val bundle = Bundle()
-//                bundle.putString(MainActivity.REQUEST_METHOD_BUNDLE_KEY, "PUT")
-//                bundle.putString(MainActivity.JSON_BUNDLE_KEY, json)
-//                bundle.putString(MainActivity.REQUEST_URL_BUNDLE_KEY, PUT_CAR_REQUEST_URL)
-//
-//                if (loaderManager.getLoader<Car>(CAR_LOADER_ID) == null)
-//                    loaderManager.initLoader<Car>(CAR_LOADER_ID, bundle, loaderCallbackContract).forceLoad()
-//                else
-//                    loaderManager.restartLoader<Car>(CAR_LOADER_ID, bundle, loaderCallbackContract).forceLoad()
-//
-//                if (contractId != null && contractId != number) {
-//                    val deleteBundle = Bundle()
-//                    deleteBundle.putString(MainActivity.REQUEST_METHOD_BUNDLE_KEY, "DELETE")
-//                    deleteBundle.putString(MainActivity.JSON_BUNDLE_KEY, "")
-//                    deleteBundle.putString(MainActivity.REQUEST_URL_BUNDLE_KEY, CAR_REQUEST_URL + contractId)
-//                    if (loaderManager.getLoader<Car>(CAR_EDIT_LOADER_ID) == null)
-//                        loaderManager.initLoader<Car>(CAR_EDIT_LOADER_ID, deleteBundle, loaderCallbackContract).forceLoad()
-//                    else
-//                        loaderManager.restartLoader<Car>(CAR_EDIT_LOADER_ID, deleteBundle, loaderCallbackContract).forceLoad()
-//                }
+                val deleteBundle = Bundle()
+                deleteBundle.putString(MainActivity.REQUEST_METHOD_BUNDLE_KEY, "DELETE")
+                deleteBundle.putString(MainActivity.JSON_BUNDLE_KEY, "")
+                deleteBundle.putString(MainActivity.REQUEST_URL_BUNDLE_KEY, CONTRACT_REQUEST_URL + contractId)
+                if (loaderManager.getLoader<Contract>(CONTRACT_LOADER_ID) == null)
+                    loaderManager.initLoader<Contract>(CONTRACT_LOADER_ID, deleteBundle, loaderCallbackContract).forceLoad()
+                else
+                    loaderManager.restartLoader<Contract>(CONTRACT_LOADER_ID, deleteBundle, loaderCallbackContract).forceLoad()
+                true
+            }
+            R.id.save_car_item_menu -> {
+                val id = view.findViewById<TextInputEditText>(R.id.id_edit_text).text.toString()
+                val address = view.findViewById<TextInputEditText>(R.id.address_edit_text).text.toString()
+                val type = view.findViewById<TextInputEditText>(R.id.type_edit_text).text.toString()
+                val startDT = view.findViewById<TextView>(R.id.start_date_time_text_view).text.toString()
+                val endDT = view.findViewById<TextView>(R.id.end_date_time_text_view).text.toString()
+                val rDT = view.findViewById<TextView>(R.id.real_date_time_text_view).text.toString()
+                val car = carList.find { it.number == (
+                        view.findViewById<Spinner>(R.id.car_spinner).selectedItem as String) }
+                val client = clientList.find { it.licenseNumber == (
+                        view.findViewById<Spinner>(R.id.client_spinner).selectedItem as String) }
+                val operator = operatorList.find { it.id == (
+                        view.findViewById<Spinner>(R.id.operator_spinner).selectedItem as String) }
+
+                val json = ObjectMapper().writeValueAsString(
+                            Contract(id, startDT, endDT, rDT, address, type, car!!, client!!, operator!!)
+                )
+
+                val bundle = Bundle()
+                bundle.putString(MainActivity.REQUEST_METHOD_BUNDLE_KEY, "PUT")
+                bundle.putString(MainActivity.JSON_BUNDLE_KEY, json)
+                bundle.putString(MainActivity.REQUEST_URL_BUNDLE_KEY, PUT_CONTRACT_REQUEST_URL)
+
+                if (loaderManager.getLoader<Contract>(CONTRACT_LOADER_ID) == null)
+                    loaderManager.initLoader<Contract>(CONTRACT_LOADER_ID, bundle, loaderCallbackContract).forceLoad()
+                else
+                    loaderManager.restartLoader<Contract>(CONTRACT_LOADER_ID, bundle, loaderCallbackContract).forceLoad()
+
+                if (contractId != null && contractId != id) {
+                    val deleteBundle = Bundle()
+                    deleteBundle.putString(MainActivity.REQUEST_METHOD_BUNDLE_KEY, "DELETE")
+                    deleteBundle.putString(MainActivity.JSON_BUNDLE_KEY, "")
+                    deleteBundle.putString(MainActivity.REQUEST_URL_BUNDLE_KEY, CONTRACT_REQUEST_URL + contractId)
+                    if (loaderManager.getLoader<Contract>(CONTRACT_EDIT_LOADER_ID) == null)
+                        loaderManager.initLoader<Contract>(CONTRACT_EDIT_LOADER_ID, deleteBundle, loaderCallbackContract).forceLoad()
+                    else
+                        loaderManager.restartLoader<Contract>(CONTRACT_EDIT_LOADER_ID, deleteBundle, loaderCallbackContract).forceLoad()
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -189,7 +192,7 @@ class ContractFragment : Fragment() {
     }
 
     private fun updateClientSpinnerUi(clientList: List<Client>) {
-        view.findViewById<Spinner>(R.id.car_spinner).adapter =
+        view.findViewById<Spinner>(R.id.client_spinner).adapter =
                 ArrayAdapter<String>(activity,
                         android.R.layout.simple_dropdown_item_1line,
                         clientList.map { it.licenseNumber })
