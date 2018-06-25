@@ -31,4 +31,6 @@
     <string name="cost_label">Cost</string>
     <string name="brand_label">Brand</string>
     <string name="model_name_label">Model name</string>
+    <string name="id_label">Id</string>
+    <string name="phone_number_label">Phone number</string>
 </resources>

@@ -15,6 +15,7 @@ import android.view.*
 import android.widget.TextView
 import com.fasterxml.jackson.databind.ObjectMapper
 import ua.alex.carsharingapp.ModelListFragment.Companion.MODEL_NUMBER_BUNDLE_KEY
+//import ua.alex.carsharingapp.ModelListFragment.Companion.MODEL_NUMBER_BUNDLE_KEY
 import ua.alex.carsharingapp.data.Client
 import ua.alex.carsharingapp.data.Model
 

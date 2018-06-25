@@ -54,25 +54,23 @@ class OperatorListFragment : Fragment() {
 //                        "green", "true", "11-01-2001", model, insurance)))
 
         view!!.findViewById<FloatingActionButton>(R.id.add_operator_fab).setOnClickListener {
-            //TODO
-//            val carFragment = CarFragment()
-//            activity.fragmentManager.beginTransaction()
-//                    .replace(R.id.content, carFragment, "CarFragment")
-//                    .addToBackStack("CarFragment")
-//                    .commit()
+            val operatorFragment = OperatorFragment()
+            activity.fragmentManager.beginTransaction()
+                    .replace(R.id.content, operatorFragment, "OperatorFragment")
+                    .addToBackStack("OperatorFragment")
+                    .commit()
         }
 
         view.findViewById<ListView>(R.id.operator_list_view).setOnItemClickListener { parent, itemView, position, id ->
-            //TODO
-//            val carFragment = CarFragment()
-//            val carNumber = itemView.findViewById<TextView>(R.id.car_number).text as String
-//            val bundle = Bundle()
-//            bundle.putString(MODEL_NUMBER_BUNDLE_KEY, carNumber)
-//            carFragment.arguments = bundle
-//            activity.fragmentManager.beginTransaction()
-//                    .replace(R.id.content, carFragment, "CarFragment")
-//                    .addToBackStack("CarFragment")
-//                    .commit()
+            val operatorFragment = OperatorFragment()
+            val operatorId = itemView.findViewById<TextView>(R.id.id).text as String
+            val bundle = Bundle()
+            bundle.putString(OPERATOR_NUMBER_BUNDLE_KEY, operatorId)
+            operatorFragment.arguments = bundle
+            activity.fragmentManager.beginTransaction()
+                    .replace(R.id.content, operatorFragment, "OperatorFragment")
+                    .addToBackStack("OperatorFragment")
+                    .commit()
         }
     }
 
@@ -124,12 +122,12 @@ class OperatorListFragment : Fragment() {
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
             var listItemView = convertView
             if (listItemView == null)
-                listItemView = LayoutInflater.from(context).inflate(R.layout.client_list_item_view, parent, false)
+                listItemView = LayoutInflater.from(context).inflate(R.layout.operator_list_item_view, parent, false)
 
             val operator = getItem(position)
 
             listItemView!!.findViewById<TextView>(R.id.name).text = operator.fullName
-            listItemView.findViewById<TextView>(R.id.number).text = operator.phoneNumber
+            listItemView.findViewById<TextView>(R.id.id).text = operator.id
 
             return listItemView
         }
