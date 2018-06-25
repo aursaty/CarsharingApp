@@ -55,12 +55,11 @@ class InsuranceListFragment : Fragment() {
 //                        "green", "true", "11-01-2001", model, insurance)))
 
         view!!.findViewById<FloatingActionButton>(R.id.add_insurance_fab).setOnClickListener {
-            //TODO
-//            val carFragment = CarFragment()
-//            activity.fragmentManager.beginTransaction()
-//                    .replace(R.id.content, carFragment, "CarFragment")
-//                    .addToBackStack("CarFragment")
-//                    .commit()
+            val insuranceFragment = InsuranceFragment()
+            activity.fragmentManager.beginTransaction()
+                    .replace(R.id.content, insuranceFragment, "InsuranceFragment")
+                    .addToBackStack("InsuranceFragment")
+                    .commit()
         }
 
         view.findViewById<ListView>(R.id.insurance_list_view).setOnItemClickListener { parent, itemView, position, id ->

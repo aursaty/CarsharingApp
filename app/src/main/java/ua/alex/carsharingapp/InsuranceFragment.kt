@@ -94,36 +94,39 @@ class InsuranceFragment : Fragment() {
                 true
             }
             R.id.save_car_item_menu -> {
-//                val id = view.findViewById<TextInputEditText>(R.id.id_edit_text).text.toString()
-//                val name = view.findViewById<TextInputEditText>(R.id.full_name_edit_text).text.toString()
-//                val address = view.findViewById<TextInputEditText>(R.id.address_edit_text).text.toString()
-//                val phone = view.findViewById<TextInputEditText>(R.id.phone_number_edit_text).text.toString()
-//
-//                val json = ObjectMapper().writeValueAsString(
-//                        Operator(id, name, address, phone)
-//                )
-//
-//                val bundle = Bundle()
-//                bundle.putString(MainActivity.REQUEST_METHOD_BUNDLE_KEY, "PUT")
-//                bundle.putString(MainActivity.JSON_BUNDLE_KEY, json)
-//                bundle.putString(MainActivity.REQUEST_URL_BUNDLE_KEY, PUT_OPERATOR_REQUEST_URL)
-//
-//                if (loaderManager.getLoader<Insurance>(LOADER_ID) == null)
-//                    loaderManager.initLoader<Insurance>(LOADER_ID, bundle, loaderCallbackInsurance).forceLoad()
-//                else
-//                    loaderManager.restartLoader<Insurance>(LOADER_ID, bundle, loaderCallbackInsurance).forceLoad()
-//
-//                if (insuranceSeries != null && insuranceSeries != id) {
-//                    val deleteBundle = Bundle()
-//                    deleteBundle.putString(MainActivity.REQUEST_METHOD_BUNDLE_KEY, "DELETE")
-//                    deleteBundle.putString(MainActivity.JSON_BUNDLE_KEY, "")
-//                    deleteBundle.putString(MainActivity.REQUEST_URL_BUNDLE_KEY, OPERATOR_REQUEST_URL + insuranceSeries)
-//
-//                    if (loaderManager.getLoader<Insurance>(EDIT_LOADER_ID) == null)
-//                        loaderManager.initLoader<Insurance>(EDIT_LOADER_ID, deleteBundle, loaderCallbackInsurance).forceLoad()
-//                    else
-//                        loaderManager.restartLoader<Insurance>(EDIT_LOADER_ID, deleteBundle, loaderCallbackInsurance).forceLoad()
-//                }
+
+                val series = view.findViewById<TextInputEditText>(R.id.series_edit_text).text.toString()
+                val address = view.findViewById<TextInputEditText>(R.id.address_edit_text).text.toString()
+                val identificationNumber = view.findViewById<TextInputEditText>(R.id.identification_number_edit_text).text.toString()
+                val companyName = view.findViewById<TextInputEditText>(R.id.company_name_edit_text).text.toString()
+                val creatingDate = view.findViewById<TextView>(R.id.creating_date_text_view).text.toString()
+                val endingDate = view.findViewById<TextView>(R.id.ending_date_text_view).text.toString()
+
+                val json = ObjectMapper().writeValueAsString(
+                        Insurance(series, creatingDate, endingDate, address, identificationNumber, companyName)
+                )
+
+                val bundle = Bundle()
+                bundle.putString(MainActivity.REQUEST_METHOD_BUNDLE_KEY, "PUT")
+                bundle.putString(MainActivity.JSON_BUNDLE_KEY, json)
+                bundle.putString(MainActivity.REQUEST_URL_BUNDLE_KEY, PUT_OPERATOR_REQUEST_URL)
+
+                if (loaderManager.getLoader<Insurance>(LOADER_ID) == null)
+                    loaderManager.initLoader<Insurance>(LOADER_ID, bundle, loaderCallbackInsurance).forceLoad()
+                else
+                    loaderManager.restartLoader<Insurance>(LOADER_ID, bundle, loaderCallbackInsurance).forceLoad()
+
+                if (insuranceSeries != null && insuranceSeries != series) {
+                    val deleteBundle = Bundle()
+                    deleteBundle.putString(MainActivity.REQUEST_METHOD_BUNDLE_KEY, "DELETE")
+                    deleteBundle.putString(MainActivity.JSON_BUNDLE_KEY, "")
+                    deleteBundle.putString(MainActivity.REQUEST_URL_BUNDLE_KEY, OPERATOR_REQUEST_URL + insuranceSeries)
+
+                    if (loaderManager.getLoader<Insurance>(EDIT_LOADER_ID) == null)
+                        loaderManager.initLoader<Insurance>(EDIT_LOADER_ID, deleteBundle, loaderCallbackInsurance).forceLoad()
+                    else
+                        loaderManager.restartLoader<Insurance>(EDIT_LOADER_ID, deleteBundle, loaderCallbackInsurance).forceLoad()
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)
