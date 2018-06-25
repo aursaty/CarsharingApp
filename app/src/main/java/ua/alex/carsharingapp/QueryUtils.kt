@@ -14,7 +14,8 @@ import java.time.LocalDateTime
 class QueryUtils {
 
     companion object {
-        private const val SERVER_ADDRESS = "http://192.168.1.138:8080"
+        private const val SERVER_ADDRESS = "http://192.168.1.133:8080"
+//        private const val SERVER_ADDRESS = "http://192.168.1.138:8080"
 //        private const val SERVER_ADDRESS = "http://127.0.0.1:8080"
         private val LOG_TAG = QueryUtils::class.java.simpleName
 

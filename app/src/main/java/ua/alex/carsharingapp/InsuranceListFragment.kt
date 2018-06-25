@@ -17,7 +17,6 @@ import android.widget.TextView
 import com.fasterxml.jackson.databind.JavaType
 import com.fasterxml.jackson.databind.ObjectMapper
 import ua.alex.carsharingapp.data.Insurance
-import ua.alex.carsharingapp.data.Model
 
 
 class InsuranceListFragment : Fragment() {
@@ -29,9 +28,9 @@ class InsuranceListFragment : Fragment() {
     }
 
     companion object {
-        const val INSURANCE_NUMBER_BUNDLE_KEY = "INSURANCE_NUMBER_BUNDLE_KEY"
+        const val INSURANCE_SERIES_BUNDLE_KEY = "INSURANCE_SERIES_BUNDLE_KEY"
 
-        private const val INSURANCE_LIST_REQUEST_URL = "/api/insurances/getAllInsurances"
+        const val INSURANCE_LIST_REQUEST_URL = "/api/insurances/getAllInsurances"
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -65,16 +64,15 @@ class InsuranceListFragment : Fragment() {
         }
 
         view.findViewById<ListView>(R.id.insurance_list_view).setOnItemClickListener { parent, itemView, position, id ->
-            //TODO
-//            val carFragment = CarFragment()
-//            val carNumber = itemView.findViewById<TextView>(R.id.car_number).text as String
-//            val bundle = Bundle()
-//            bundle.putString(MODEL_NUMBER_BUNDLE_KEY, carNumber)
-//            carFragment.arguments = bundle
-//            activity.fragmentManager.beginTransaction()
-//                    .replace(R.id.content, carFragment, "CarFragment")
-//                    .addToBackStack("CarFragment")
-//                    .commit()
+            val insuranceFragment = InsuranceFragment()
+            val series = itemView.findViewById<TextView>(R.id.series).text as String
+            val bundle = Bundle()
+            bundle.putString(INSURANCE_SERIES_BUNDLE_KEY, series)
+            insuranceFragment.arguments = bundle
+            activity.fragmentManager.beginTransaction()
+                    .replace(R.id.content, insuranceFragment, "InsuranceFragment")
+                    .addToBackStack("InsuranceFragment")
+                    .commit()
         }
     }
 

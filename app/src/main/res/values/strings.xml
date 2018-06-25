@@ -33,4 +33,8 @@
     <string name="model_name_label">Model name</string>
     <string name="id_label">Id</string>
     <string name="phone_number_label">Phone number</string>
+    <string name="series_label">Series</string>
+    <string name="ending_date_label">Ending date</string>
+    <string name="identification_number_label">Identification number</string>
+    <string name="company_name_label">Company name</string>
 </resources>
