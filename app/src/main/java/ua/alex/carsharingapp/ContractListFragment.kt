@@ -1,13 +1,13 @@
 package ua.alex.carsharingapp
 
 
+import android.app.Fragment
 import android.app.LoaderManager
 import android.content.AsyncTaskLoader
 import android.content.Context
 import android.content.Loader
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
-import android.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +16,6 @@ import android.widget.ListView
 import android.widget.TextView
 import com.fasterxml.jackson.databind.JavaType
 import com.fasterxml.jackson.databind.ObjectMapper
-import ua.alex.carsharingapp.data.Client
 import ua.alex.carsharingapp.data.Contract
 
 class ContractListFragment : Fragment() {
@@ -64,16 +63,15 @@ class ContractListFragment : Fragment() {
         }
 
         view.findViewById<ListView>(R.id.contract_list_view).setOnItemClickListener { parent, itemView, position, id ->
-            //TODO
-//            val carFragment = CarFragment()
-//            val carNumber = itemView.findViewById<TextView>(R.id.car_number).text as String
-//            val bundle = Bundle()
-//            bundle.putString(MODEL_NUMBER_BUNDLE_KEY, carNumber)
-//            carFragment.arguments = bundle
-//            activity.fragmentManager.beginTransaction()
-//                    .replace(R.id.content, carFragment, "CarFragment")
-//                    .addToBackStack("CarFragment")
-//                    .commit()
+            val contractFragment = ContractFragment()
+            val contractId = itemView.findViewById<TextView>(R.id.id).text as String
+            val bundle = Bundle()
+            bundle.putString(CONTRACT_NUMBER_BUNDLE_KEY, contractId)
+            contractFragment.arguments = bundle
+            activity.fragmentManager.beginTransaction()
+                    .replace(R.id.content, contractFragment, "ContractFragment")
+                    .addToBackStack("ContractFragment")
+                    .commit()
         }
     }
 

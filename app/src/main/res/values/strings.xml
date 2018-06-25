@@ -37,4 +37,10 @@
     <string name="ending_date_label">Ending date</string>
     <string name="identification_number_label">Identification number</string>
     <string name="company_name_label">Company name</string>
+    <string name="start_date_time_label">Start Date and Time</string>
+    <string name="end_date_and_time_label">End Date and Time</string>
+    <string name="real_date_and_time_label">Real Date and Time</string>
+    <string name="car_label">Car</string>
+    <string name="client_label">Client</string>
+    <string name="operator_label">Operator</string>
 </resources>
